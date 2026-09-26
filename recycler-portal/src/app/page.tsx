@@ -8,15 +8,15 @@ import dynamic from "next/dynamic";
 
 const LotsMap = dynamic(() => import('@/components/MapWrapper'), { 
   ssr: false, 
-  loading: () => <div className="h-[450px] w-full rounded-xl authentic-panel animate-pulse flex items-center justify-center mb-12">Loading Map...</div> 
+  loading: () => <div className="h-[420px] w-full rounded-2xl glass-panel animate-shimmer flex items-center justify-center mb-10 border border-white/5"><span className="text-slate-500 text-sm">Loading Map…</span></div> 
 });
 
 export default function Home() {
   const lots = useLiveQuery(() => db.lots.toArray());
   const [mounted, setMounted] = useState(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ material_type: '', estimated_weight_kg: '', estimated_value_inr: '' });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -42,161 +42,251 @@ export default function Home() {
 
   if (!mounted) return null;
 
+  const totalWeight = lots?.reduce((sum, l) => sum + l.estimated_weight_kg, 0) || 0;
+  const totalValue = lots?.reduce((sum, l) => sum + l.estimated_value_inr, 0) || 0;
+
   return (
-    <main className="min-h-screen pb-16 font-sans">
-      <nav className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-[#262626] px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-[#ededed] rounded-sm flex items-center justify-center">
-            <span className="text-[#0a0a0a] font-bold text-xs">K</span>
-          </div>
-          <h1 className="text-lg font-semibold tracking-tight text-[#ededed]">
-            Kabadiwala
-          </h1>
-        </div>
-        <div className="hidden md:flex space-x-8 text-sm font-medium">
-          <Link href="/admin" className="text-[#a3a3a3] hover:text-[#ededed] transition-colors">Dashboard</Link>
-          <Link href="/" className="text-[#ededed] transition-colors relative">
-            Lots Browser
-            <span className="absolute -bottom-[19px] left-0 w-full h-[2px] bg-[#ededed]"></span>
+    <main className="min-h-screen pb-16 relative">
+      {/* ─── NAVIGATION ─── */}
+      <nav className="glass-header sticky top-0 z-50 px-6 lg:px-10 py-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition-shadow">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            </div>
+            <span className="text-xl font-bold text-gradient tracking-tight">Kabadiwala</span>
           </Link>
-          <Link href="/handovers" className="text-[#a3a3a3] hover:text-[#ededed] transition-colors">Handovers</Link>
+
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-1">
+            <Link href="/" className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-white/5 border border-white/10">
+              Lots Browser
+            </Link>
+            <Link href="/handovers" className="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+              Handovers
+            </Link>
+            <Link href="/admin" className="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+              Admin
+            </Link>
+            <div className="w-px h-6 bg-white/10 mx-2"></div>
+            <Link href="/login" className="glass-button px-4 py-2 rounded-lg text-sm font-semibold text-white">
+              Sign In
+            </Link>
+          </div>
+
+          {/* Mobile hamburger */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 transition"
+            aria-label="Toggle menu"
+          >
+            <svg className="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {mobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
         </div>
+
+        {/* Mobile dropdown */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-3 pb-3 border-t border-white/5 pt-3 flex flex-col gap-1 animate-slide-up">
+            <Link href="/" className="px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-white/5">Lots Browser</Link>
+            <Link href="/handovers" className="px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition">Handovers</Link>
+            <Link href="/admin" className="px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition">Admin</Link>
+            <Link href="/login" className="glass-button px-4 py-2.5 rounded-lg text-sm font-semibold text-white text-center mt-1">Sign In</Link>
+          </div>
+        )}
       </nav>
 
-      <div className="max-w-6xl mx-auto px-6 mt-16 animate-fade-in">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-[#262626] pb-8">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-semibold mb-3 text-[#ededed] tracking-tight">Available Lots</h2>
-            <p className="text-[#a3a3a3] text-base leading-relaxed">
-              Explore localized e-waste materials prepared for recycling. Ensure your sync is active to receive real-time updates from field collectors.
-            </p>
-          </div>
-          
-          <div className="mt-6 md:mt-0 flex gap-4 items-center">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-[#141414] border border-[#262626] text-xs font-medium text-[#a3a3a3]">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              Live Sync
-            </div>
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="authentic-button px-5 py-2 rounded-md text-sm font-medium flex items-center gap-2 shadow-sm"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
-              Add Lot
-            </button>
-          </div>
-        </header>
-        
-        <LotsMap lots={lots || []} />
-        
-        <div className="mt-16">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-medium text-[#ededed]">Recent Entries</h3>
-            {lots && lots.length > 0 && (
-              <span className="text-sm text-[#a3a3a3]">{lots.length} total lots</span>
-            )}
-          </div>
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
-          {!lots ? (
-            <div className="flex justify-center items-center h-40">
-              <div className="w-6 h-6 border-2 border-[#262626] border-t-[#ededed] rounded-full animate-spin"></div>
+        {/* ─── HERO STRIP ─── */}
+        <div className="mt-10 mb-10 animate-slide-up">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
+            <div>
+              <p className="text-emerald-400 text-sm font-semibold tracking-wider uppercase mb-2">Recycler Portal</p>
+              <h2 className="text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                Available <span className="text-gradient">Lots</span>
+              </h2>
+              <p className="text-slate-400 text-lg mt-2 max-w-lg">Browse e-waste materials near you. Prepare quotes, track handovers, and manage your recycling pipeline.</p>
             </div>
-          ) : lots.length === 0 ? (
-            <div className="authentic-panel p-10 text-center rounded-xl flex flex-col items-center justify-center">
-              <p className="text-[#a3a3a3] mb-6 text-sm">The local database is currently empty.</p>
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => setIsModalOpen(true)}
-                  className="authentic-button px-5 py-2 rounded-md font-medium text-sm"
-                >
-                  Create Manual Entry
-                </button>
-                <button 
-                  onClick={() => {
-                    db.lots.bulkAdd([
-                      { id: '1', status: 'available', updated_at: new Date().toISOString(), collector_id: 'c1', material_type: 'Mixed Copper & Cables', estimated_weight_kg: 45, estimated_value_inr: 8500, location_lat: 18.51 + (Math.random() - 0.5)*0.1, location_lng: 73.85 + (Math.random() - 0.5)*0.1 },
-                      { id: '2', status: 'available', updated_at: new Date().toISOString(), collector_id: 'c2', material_type: 'Old Smartphones (Scrap)', estimated_weight_kg: 12, estimated_value_inr: 12000, location_lat: 18.52 + (Math.random() - 0.5)*0.1, location_lng: 73.84 + (Math.random() - 0.5)*0.1 },
-                      { id: '3', status: 'available', updated_at: new Date().toISOString(), collector_id: 'c3', material_type: 'Motherboards & RAM', estimated_weight_kg: 8, estimated_value_inr: 15400, location_lat: 18.53 + (Math.random() - 0.5)*0.1, location_lng: 73.86 + (Math.random() - 0.5)*0.1 },
-                      { id: '4', status: 'available', updated_at: new Date().toISOString(), collector_id: 'c4', material_type: 'CRT Monitors', estimated_weight_kg: 120, estimated_value_inr: 3000, location_lat: 18.50 + (Math.random() - 0.5)*0.1, location_lng: 73.82 + (Math.random() - 0.5)*0.1 },
-                    ]);
-                  }}
-                  className="authentic-button-outline px-5 py-2 rounded-md font-medium text-sm">
-                  Populate Demo Data
-                </button>
+
+            <div className="flex gap-3 items-center flex-wrap">
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="glass-button px-5 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4"></path></svg>
+                Add New Lot
+              </button>
+              <div className="glass-panel px-4 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2.5">
+                <span className="glow-dot"></span>
+                <span className="text-slate-300">Live Sync</span>
               </div>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {lots.map((lot, idx) => (
-                <div 
-                  key={lot.id} 
-                  className="authentic-panel rounded-xl p-5 group flex flex-col justify-between hover:border-[#404040]"
-                >
-                  <div>
-                    <div className="flex justify-between items-start mb-4">
-                      <h4 className="text-base font-semibold text-[#ededed] leading-snug">{lot.material_type}</h4>
-                      <span className="bg-[#141414] border border-[#262626] text-[#a3a3a3] text-[11px] font-medium px-2 py-1 rounded">
-                        {lot.estimated_weight_kg} kg
-                      </span>
+          </div>
+        </div>
+
+        {/* ─── KPI STRIP ─── */}
+        {lots && lots.length > 0 && (
+          <div className="grid grid-cols-3 gap-4 mb-10 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+            <div className="glass-panel rounded-xl px-5 py-4 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Lots</p>
+                <p className="text-2xl font-extrabold text-white stat-value">{lots.length}</p>
+              </div>
+            </div>
+            <div className="glass-panel rounded-xl px-5 py-4 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Weight</p>
+                <p className="text-2xl font-extrabold text-white stat-value">{totalWeight.toLocaleString()} <span className="text-sm font-medium text-slate-400">kg</span></p>
+              </div>
+            </div>
+            <div className="glass-panel rounded-xl px-5 py-4 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Est. Value</p>
+                <p className="text-2xl font-extrabold text-white stat-value">₹{totalValue.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── MAP ─── */}
+        <div className="animate-slide-up" style={{ animationDelay: '0.15s' }}>
+          <LotsMap lots={lots || []} />
+        </div>
+        
+        {/* ─── LOTS GRID ─── */}
+        {!lots ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="w-10 h-10 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"></div>
+          </div>
+        ) : lots.length === 0 ? (
+          <div className="gradient-card p-12 text-center rounded-2xl flex flex-col items-center justify-center animate-fade-in-scale">
+            <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center mb-5">
+              <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">No lots available yet</h3>
+            <p className="text-slate-400 max-w-sm">There are no materials in your area at the moment. Add a lot or load demo data to get started.</p>
+            <div className="flex gap-4 mt-8">
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="glass-button px-6 py-3 rounded-xl font-semibold text-white"
+              >
+                Add Your First Lot
+              </button>
+              <button 
+                onClick={() => {
+                  db.lots.bulkAdd([
+                    { id: '1', status: 'available', updated_at: new Date().toISOString(), collector_id: 'c1', material_type: 'Mixed Copper & Cables', estimated_weight_kg: 45, estimated_value_inr: 8500, location_lat: 18.51 + (Math.random() - 0.5)*0.1, location_lng: 73.85 + (Math.random() - 0.5)*0.1 },
+                    { id: '2', status: 'available', updated_at: new Date().toISOString(), collector_id: 'c2', material_type: 'Old Smartphones (Scrap)', estimated_weight_kg: 12, estimated_value_inr: 12000, location_lat: 18.52 + (Math.random() - 0.5)*0.1, location_lng: 73.84 + (Math.random() - 0.5)*0.1 },
+                    { id: '3', status: 'available', updated_at: new Date().toISOString(), collector_id: 'c3', material_type: 'Motherboards & RAM', estimated_weight_kg: 8, estimated_value_inr: 15400, location_lat: 18.53 + (Math.random() - 0.5)*0.1, location_lng: 73.86 + (Math.random() - 0.5)*0.1 },
+                    { id: '4', status: 'available', updated_at: new Date().toISOString(), collector_id: 'c4', material_type: 'CRT Monitors', estimated_weight_kg: 120, estimated_value_inr: 3000, location_lat: 18.50 + (Math.random() - 0.5)*0.1, location_lng: 73.82 + (Math.random() - 0.5)*0.1 },
+                  ]);
+                }}
+                className="glass-button-outline px-6 py-3 rounded-xl font-semibold"
+              >
+                Load Demo Data
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {lots.map((lot, idx) => (
+              <div 
+                key={lot.id} 
+                className={`gradient-card p-6 relative overflow-hidden group hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-400 animate-slide-up stagger-${Math.min(idx + 1, 6)}`}
+                style={{ opacity: 0 }}
+              >
+                {/* Decorative corner glow */}
+                <div className="absolute -top-16 -right-16 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+                
+                <div className="relative z-10">
+                  {/* Header */}
+                  <div className="flex justify-between items-start mb-5">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold text-white mb-1 truncate">{lot.material_type}</h3>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center">
+                          <span className="text-[8px] font-bold text-white">P</span>
+                        </div>
+                        <p className="text-slate-500 text-xs font-medium">Local Collector • Pune</p>
+                      </div>
                     </div>
-                    
-                    <div className="space-y-2 mb-6">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-[#737373]">Value</span>
-                        <span className="text-[#ededed] font-medium">₹{lot.estimated_value_inr.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-[#737373]">Status</span>
-                        <span className="text-[#ededed] capitalize flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                          {lot.status.replace('_', ' ')}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-[#737373]">Location</span>
-                        <span className="text-[#a3a3a3]">Pune Region</span>
-                      </div>
+                    <span className="flex-shrink-0 ml-3 bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-500/20">
+                      {lot.estimated_weight_kg} kg
+                    </span>
+                  </div>
+                  
+                  {/* Details */}
+                  <div className="space-y-3 mb-6">
+                    <div className="flex justify-between items-center py-2.5 border-b border-white/5">
+                      <span className="text-slate-500 text-sm">Estimated Value</span>
+                      <span className="text-white font-bold text-lg stat-value">₹{lot.estimated_value_inr.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2.5 border-b border-white/5">
+                      <span className="text-slate-500 text-sm">Status</span>
+                      <span className="flex items-center gap-2 text-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <span className="text-slate-300 capitalize">{lot.status.replace('_', ' ')}</span>
+                      </span>
                     </div>
                   </div>
                   
-                  <button className="w-full authentic-button-outline text-xs font-medium py-2.5 rounded-md flex justify-center items-center gap-1.5">
-                    Prepare Quote
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                  {/* CTA */}
+                  <button className="w-full glass-button text-white font-semibold py-3 rounded-xl flex justify-center items-center gap-2 text-sm">
+                    <span>Prepare Quote</span>
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                   </button>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
+      {/* ─── ADD LOT MODAL ─── */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-          <div className="authentic-panel p-8 rounded-xl w-full max-w-md relative z-10 shadow-2xl animate-slide-up">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-semibold text-[#ededed]">New Lot Entry</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-[#737373] hover:text-[#ededed] transition-colors p-1">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-              </button>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
+          <div className="glass-panel p-8 rounded-2xl w-full max-w-md relative z-10 animate-fade-in-scale border border-white/10 shadow-2xl shadow-black/50">
+            <button onClick={() => setIsModalOpen(false)} className="absolute top-5 right-5 w-8 h-8 rounded-lg hover:bg-white/5 flex items-center justify-center text-slate-400 hover:text-white transition">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div className="mb-6">
+              <h3 className="text-2xl font-bold text-white">Create New Lot</h3>
+              <p className="text-slate-500 text-sm mt-1">Fill in the details to add a new e-waste lot</p>
             </div>
             
             <form onSubmit={handleAddLot} className="space-y-5">
               <div>
-                <label className="block text-xs font-medium text-[#a3a3a3] mb-1.5 uppercase tracking-wide">Material Type</label>
+                <label className="block text-sm font-semibold text-slate-300 mb-2">Material Type</label>
                 <input 
                   required
                   type="text" 
                   value={formData.material_type}
                   onChange={e => setFormData({...formData, material_type: e.target.value})}
-                  className="w-full bg-[#0a0a0a] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#737373] focus:outline-none focus:border-[#525252] transition-colors"
+                  className="w-full"
                   placeholder="e.g. Copper wire, Laptops"
                 />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-[#a3a3a3] mb-1.5 uppercase tracking-wide">Weight (kg)</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Weight (kg)</label>
                   <input 
                     required
                     type="number" 
@@ -204,27 +294,27 @@ export default function Home() {
                     step="0.1"
                     value={formData.estimated_weight_kg}
                     onChange={e => setFormData({...formData, estimated_weight_kg: e.target.value})}
-                    className="w-full bg-[#0a0a0a] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#737373] focus:outline-none focus:border-[#525252] transition-colors"
+                    className="w-full"
                     placeholder="0.0"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#a3a3a3] mb-1.5 uppercase tracking-wide">Value (₹)</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Value (₹)</label>
                   <input 
                     required
                     type="number" 
                     min="1"
                     value={formData.estimated_value_inr}
                     onChange={e => setFormData({...formData, estimated_value_inr: e.target.value})}
-                    className="w-full bg-[#0a0a0a] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#737373] focus:outline-none focus:border-[#525252] transition-colors"
+                    className="w-full"
                     placeholder="0"
                   />
                 </div>
               </div>
               
-              <div className="pt-4 border-t border-[#262626] mt-6">
-                <button type="submit" className="w-full authentic-button text-sm font-medium py-2.5 rounded-md">
-                  Register Entry
+              <div className="pt-2">
+                <button type="submit" className="w-full glass-button text-white font-bold py-3 rounded-xl">
+                  Submit & Sync
                 </button>
               </div>
             </form>

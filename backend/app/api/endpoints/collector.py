@@ -126,10 +126,54 @@ async def get_safety_guides(lang: str = "hi", category: str = "BATTERY") -> Any:
     return {"guides": []}
 
 @router.get("/sync")
-async def sync_pull(since: str = None) -> Any:
-    return {"delta": {"prices": [], "recyclers": [], "transactions": []}}
+async def sync_pull(since: str = None, db: Session = Depends(get_db)) -> Any:
+    # A proper sync would filter by `updated_at > since`
+    prices = db.query(PriceData).all()
+    recyclers = db.query(Recycler).filter(Recycler.is_active == True).all()
+    txns = db.query(Transaction).all()
+    return {
+        "delta": {
+            "prices": prices,
+            "recyclers": recyclers,
+            "transactions": txns
+        }
+    }
 
 @router.post("/sync/push")
-async def sync_push(payload: dict) -> Any:
-    # Stub: Process offline sync queue
-    return {"server_ts": "2024-01-15T10:05:00Z", "op_results": []}
+async def sync_push(payload: dict, db: Session = Depends(get_db)) -> Any:
+    ops = payload.get("pending_ops", [])
+    results = []
+    for op in ops:
+        entity = op.get("entity")
+        action = op.get("op")
+        data = op.get("payload")
+        
+        try:
+            if entity == "lot" and action == "create":
+                new_lot = MaterialLot(
+                    reference_code=data.get("reference_code", str(uuid.uuid4())[:8]),
+                    category=data.get("category", "OTHER"),
+                    subcategory=data.get("subcategory"),
+                    weight_kg=data.get("weight_kg", 0.0),
+                    status="draft"
+                )
+                db.add(new_lot)
+                db.commit()
+                results.append({"id": op.get("id"), "status": "success", "server_id": new_lot.lot_id})
+            elif entity == "lot" and action == "update":
+                lot = db.query(MaterialLot).filter(MaterialLot.lot_id == data.get("lot_id")).first()
+                if lot:
+                    for k, v in data.items():
+                        setattr(lot, k, v)
+                    db.commit()
+                    results.append({"id": op.get("id"), "status": "success"})
+                else:
+                    results.append({"id": op.get("id"), "status": "failed", "reason": "Not found"})
+            else:
+                results.append({"id": op.get("id"), "status": "ignored", "reason": "Unknown operation"})
+        except Exception as e:
+            db.rollback()
+            results.append({"id": op.get("id"), "status": "failed", "reason": str(e)})
+
+    from datetime import datetime, timezone
+    return {"server_ts": datetime.now(timezone.utc).isoformat(), "op_results": results}

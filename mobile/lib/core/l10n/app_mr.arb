@@ -1,0 +1,15 @@
+{
+  "priceBoard": "भाव फलक",
+  "pricePerKg": "₹{price} प्रति किलो",
+  "@pricePerKg": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "speakPrice": "भाव ऐका",
+  "newLot": "नवीन सामान",
+  "findRecycler": "रीसाइकलर शोधा",
+  "myEarnings": "माझी कमाई"
+}

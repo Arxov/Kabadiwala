@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ewaste-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ewaste-backend
+  template:
+    metadata:
+      labels:
+        app: ewaste-backend
+    spec:
+      containers:
+      - name: backend
+        image: ewaste-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ewaste-backend-svc
+spec:
+  selector:
+    app: ewaste-backend
+  ports:
+  - port: 80
+    targetPort: 8000

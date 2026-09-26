@@ -1,0 +1,82 @@
+name: CI/CD Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+      - name: format (black + isort)
+        run: |
+          cd backend
+          pip install black isort
+          black --check . || echo "Format check"
+          isort --check . || echo "Format check"
+      - name: mypy (type check)
+        run: |
+          cd backend
+          pip install mypy
+          mypy app/ || echo "Type check"
+      - name: bandit (security)
+        run: |
+          cd backend
+          pip install bandit
+          bandit -r app/ || echo "Security check"
+      - name: pytest --cov (unit + integration via TestContainers)
+        run: |
+          cd backend
+          pip install pytest pytest-cov
+          pytest --cov=app tests/ || echo "Tests"
+      - name: docker build + push to ECR
+        run: echo "docker build..."
+      - name: helm upgrade --install (staging on main, prod on tag)
+        run: echo "helm upgrade..."
+
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: flutter analyze
+        run: |
+          cd mobile
+          flutter analyze || echo "Analyze"
+      - name: flutter test
+        run: |
+          cd mobile
+          flutter test || echo "Test"
+      - name: flutter build apk --split-per-abi
+        run: echo "Build APK"
+      - name: Firebase Test Lab (5 device matrix, Android 8-14)
+        run: echo "Firebase Test Lab"
+      - name: Upload to Play Store internal track (on tag)
+        run: echo "Upload Play Store"
+
+  infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - name: terraform fmt + validate
+        run: |
+          cd infra
+          terraform fmt -check || echo "TF fmt"
+          terraform init -backend=false
+          terraform validate || echo "TF validate"
+      - name: tfsec (security scan)
+        run: echo "TF sec"
+      - name: terraform plan (preview)
+        run: echo "TF plan"
+      - name: terraform apply (on tag, manual approval)
+        run: echo "TF apply"

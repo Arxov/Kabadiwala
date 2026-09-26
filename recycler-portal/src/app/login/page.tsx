@@ -20,20 +20,22 @@ export default function Login() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute top-1/4 -left-20 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
-      
-      <div className="w-full max-w-md animate-slide-up z-10">
+    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#0a0a0a] font-sans">
+      <div className="w-full max-w-[360px] animate-fade-in">
+        <div className="flex justify-center mb-8">
+          <div className="w-12 h-12 bg-[#ededed] rounded flex items-center justify-center shadow-sm">
+            <span className="text-[#0a0a0a] font-bold text-xl tracking-tight">K</span>
+          </div>
+        </div>
+        
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gradient mb-2">E-Waste Connect</h1>
-          <p className="text-slate-400 font-medium text-lg">Sign in to your Recycler Portal</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-[#ededed] mb-1.5">Welcome back</h1>
+          <p className="text-[#a3a3a3] text-sm">Sign in to the Kabadiwala Portal</p>
         </div>
 
-        <form onSubmit={handleLogin} className="glass-panel p-8 rounded-2xl">
-          <div className="mb-6">
-            <label className="block text-slate-300 text-sm font-semibold mb-2" htmlFor="email">
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-[#a3a3a3] mb-1.5 uppercase tracking-wide" htmlFor="email">
               Email Address
             </label>
             <input
@@ -42,13 +44,13 @@ export default function Login() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+              className="w-full bg-[#0a0a0a] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#737373] focus:outline-none focus:border-[#525252] transition-colors"
               placeholder="admin@recycler.com"
             />
           </div>
 
-          <div className="mb-8">
-            <label className="block text-slate-300 text-sm font-semibold mb-2" htmlFor="password">
+          <div>
+            <label className="block text-xs font-medium text-[#a3a3a3] mb-1.5 uppercase tracking-wide" htmlFor="password">
               Password
             </label>
             <input
@@ -57,25 +59,27 @@ export default function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+              className="w-full bg-[#0a0a0a] border border-[#262626] rounded-md px-3 py-2 text-sm text-[#ededed] placeholder-[#737373] focus:outline-none focus:border-[#525252] transition-colors"
               placeholder="••••••••"
             />
           </div>
 
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="w-full glass-button text-white font-bold py-3.5 rounded-xl flex justify-center items-center gap-2 mb-6 disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              "Sign In"
-            )}
-          </button>
+          <div className="pt-2">
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="w-full authentic-button text-sm font-medium py-2.5 rounded-md flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-[#0a0a0a] border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                "Continue"
+              )}
+            </button>
+          </div>
           
-          <div className="text-center text-sm text-slate-400">
-            Don&apos;t have an account? <Link href="#" className="text-emerald-400 hover:text-emerald-300 font-semibold transition">Register here</Link>
+          <div className="text-center text-xs text-[#737373] mt-6">
+            Don&apos;t have an account? <Link href="#" className="text-[#ededed] hover:underline font-medium ml-1 transition-colors">Request access</Link>
           </div>
         </form>
       </div>

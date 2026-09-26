@@ -3,62 +3,68 @@
 @tailwind utilities;
 
 :root {
-  --background: #0f172a;
-  --foreground: #f8fafc;
+  --background: #0a0a0a;
+  --foreground: #ededed;
   --primary: #10b981;
   --primary-hover: #059669;
-  --accent: #3b82f6;
-  --card-bg: rgba(30, 41, 59, 0.7);
-  --card-border: rgba(255, 255, 255, 0.1);
+  --border: #262626;
+  --panel: #141414;
 }
 
 body {
   color: var(--foreground);
-  background: radial-gradient(circle at top left, #1e293b, var(--background), #020617);
-  background-attachment: fixed;
+  background-color: var(--background);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   margin: 0;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer utilities {
-  .glass-panel {
-    background: var(--card-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--card-border);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  .authentic-panel {
+    background-color: var(--panel);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
   }
   
-  .glass-button {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9));
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  .authentic-button {
+    background-color: var(--foreground);
+    color: var(--background);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
   }
   
-  .glass-button:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+  .authentic-button:hover {
+    background-color: #d4d4d4;
   }
   
-  .glass-header {
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--card-border);
+  .authentic-button-outline {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
   }
   
-  .text-gradient {
-    background: linear-gradient(135deg, #34d399, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .authentic-button-outline:hover {
+    border-color: #525252;
+    background-color: #171717;
   }
 }
 
-@keyframes slideUpFade {
+@keyframes fadeIn {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
   }
   100% {
     opacity: 1;
@@ -66,11 +72,15 @@ body {
   }
 }
 
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
 .animate-slide-up {
-  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Hack to make standard OSM tiles dark mode */
 .map-tiles {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%) grayscale(40%);
 }

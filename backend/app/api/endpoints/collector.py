@@ -1,6 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 from typing import Any, List
 from pydantic import BaseModel
+import uuid
+from app.db.session import get_db
+from app.models.all import Collector, MaterialLot, PriceData, Recycler, Transaction
 
 router = APIRouter()
 
@@ -29,29 +33,55 @@ async def refresh_tokens() -> Any:
     return {"access_token": "new_stub_token"}
 
 @router.get("/prices/board")
-async def get_price_board(category: str = None, lat: float = None, lng: float = None, radius_km: int = 50) -> Any:
-    # Stub: Price board logic
-    return {"prices": []}
+async def get_price_board(category: str = None, lat: float = None, lng: float = None, radius_km: int = 50, db: Session = Depends(get_db)) -> Any:
+    query = db.query(PriceData)
+    if category:
+        query = query.filter(PriceData.category == category)
+    prices = query.all()
+    return {"prices": prices}
 
 @router.get("/prices/trends")
 async def get_price_trends(category: str, days: int = 30, lat: float = None, lng: float = None) -> Any:
     return {"trends": []}
 
 @router.post("/lots")
-async def create_lot(payload: dict) -> Any:
-    return {"lot_id": "stub_lot_uuid"}
+async def create_lot(payload: dict, db: Session = Depends(get_db)) -> Any:
+    new_lot = MaterialLot(
+        reference_code=payload.get("reference_code", str(uuid.uuid4())[:8]),
+        category=payload.get("category", "OTHER"),
+        subcategory=payload.get("subcategory"),
+        weight_kg=payload.get("weight_kg", 0.0),
+        condition=payload.get("condition", "mixed"),
+        source_type=payload.get("source_type", "residential"),
+        status="draft"
+    )
+    db.add(new_lot)
+    db.commit()
+    db.refresh(new_lot)
+    return {"lot_id": str(new_lot.lot_id)}
 
 @router.get("/lots")
-async def list_lots() -> Any:
-    return {"lots": []}
+async def list_lots(db: Session = Depends(get_db)) -> Any:
+    lots = db.query(MaterialLot).all()
+    return {"lots": lots}
 
 @router.get("/lots/{lot_id}")
-async def get_lot(lot_id: str) -> Any:
-    return {"lot_id": lot_id}
+async def get_lot(lot_id: str, db: Session = Depends(get_db)) -> Any:
+    lot = db.query(MaterialLot).filter(MaterialLot.lot_id == lot_id).first()
+    if not lot:
+        raise HTTPException(status_code=404, detail="Lot not found")
+    return lot
 
 @router.put("/lots/{lot_id}")
-async def update_lot(lot_id: str, payload: dict) -> Any:
-    return {"status": "updated"}
+async def update_lot(lot_id: str, payload: dict, db: Session = Depends(get_db)) -> Any:
+    lot = db.query(MaterialLot).filter(MaterialLot.lot_id == lot_id).first()
+    if not lot:
+        raise HTTPException(status_code=404, detail="Lot not found")
+    for k, v in payload.items():
+        setattr(lot, k, v)
+    db.commit()
+    db.refresh(lot)
+    return lot
 
 @router.post("/lots/{lot_id}/images")
 async def upload_lot_image(lot_id: str) -> Any:
@@ -66,16 +96,18 @@ async def estimate_lot_price(lot_id: str) -> Any:
     return {"estimate": [130, 150, 180], "unit": "kg"}
 
 @router.get("/recyclers")
-async def get_nearby_recyclers(lat: float, lng: float, material: str = None, radius_km: int = 50) -> Any:
-    return {"recyclers": []}
+async def get_nearby_recyclers(lat: float, lng: float, material: str = None, radius_km: int = 50, db: Session = Depends(get_db)) -> Any:
+    recyclers = db.query(Recycler).filter(Recycler.is_active == True).all()
+    return {"recyclers": recyclers}
 
 @router.post("/recyclers/{recycler_id}/quote")
 async def request_quote(recycler_id: str, payload: dict) -> Any:
     return {"status": "quote_requested"}
 
 @router.get("/transactions")
-async def get_transactions() -> Any:
-    return {"transactions": []}
+async def get_transactions(db: Session = Depends(get_db)) -> Any:
+    txns = db.query(Transaction).all()
+    return {"transactions": txns}
 
 @router.post("/transactions/{txn_id}/confirm-handover")
 async def confirm_handover(txn_id: str, payload: dict) -> Any:

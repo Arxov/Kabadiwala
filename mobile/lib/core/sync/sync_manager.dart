@@ -30,7 +30,7 @@ void callbackDispatcher() {
         // Network call to backend
         final dio = Dio();
         final response = await dio.post(
-          'https://api.ewasteconnect.in/api/v1/sync/push', 
+          'http://10.0.2.2:8000/api/v1/sync/push', // Using 10.0.2.2 for Android emulator -> localhost routing
           data: payload,
           options: Options(
             headers: {'Authorization': 'Bearer STUB_TOKEN'}, // Should come from secure storage

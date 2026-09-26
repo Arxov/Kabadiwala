@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ewaste-backend
+  labels:
+    app: ewaste-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ewaste-backend
+  template:
+    metadata:
+      labels:
+        app: ewaste-backend
+    spec:
+      containers:
+      - name: ewaste-backend
+        image: your-aws-account-id.dkr.ecr.ap-south-1.amazonaws.com/ewaste-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: POSTGRES_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: ewaste-db-secret
+              key: host
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: ewaste-db-secret
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ewaste-db-secret
+              key: password
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: ewaste-db-secret
+              key: dbname
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

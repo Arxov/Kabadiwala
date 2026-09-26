@@ -13,7 +13,11 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/v1/admin/dashboard/stats')
+    fetch('https://afraid-bottles-unite.loca.lt/api/v1/admin/dashboard/stats', {
+      headers: {
+        'Bypass-Tunnel-Reminder': 'true' // Required by localtunnel to bypass the reminder page
+      }
+    })
       .then(res => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();

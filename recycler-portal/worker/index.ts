@@ -1,3 +1,5 @@
+/// <reference lib="webworker" />
+
 import { clientsClaim } from 'workbox-core';
 import { precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
@@ -5,14 +7,14 @@ import { StaleWhileRevalidate, NetworkFirst, CacheFirst } from 'workbox-strategi
 import { ExpirationPlugin } from 'workbox-expiration';
 import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
-// self is a ServiceWorkerGlobalScope
-declare const self: ServiceWorkerGlobalScope;
+// Cast self to ServiceWorkerGlobalScope
+const swSelf = self as unknown as ServiceWorkerGlobalScope;
 
 // This will be replaced by the precache manifest injected by next-pwa
-precacheAndRoute(self.__WB_MANIFEST || []);
+precacheAndRoute((self as any).__WB_MANIFEST || []);
 
 clientsClaim();
-self.skipWaiting();
+swSelf.skipWaiting();
 
 // 1. StaleWhileRevalidate for lot listings
 registerRoute(
@@ -57,7 +59,7 @@ registerRoute(
   })
 );
 
-self.addEventListener('activate', (event) => {
+swSelf.addEventListener('activate', (event) => {
   // Clear old caches if version mismatch logic needed, though workbox-precaching handles its own.
   event.waitUntil(
     caches.keys().then((cacheNames) => {

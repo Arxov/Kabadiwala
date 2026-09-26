@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "E-Waste Connect Portal",
   description: "Offline-first PWA for e-waste recyclers",
   manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
   themeColor: "#047857",
 };
 

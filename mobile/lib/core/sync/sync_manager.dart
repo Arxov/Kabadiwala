@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:workmanager/workmanager.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import '../database/database.dart';
 
 const syncTaskName = "syncOfflineQueue";
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    WidgetsFlutterBinding.ensureInitialized();
     try {
       if (task == syncTaskName) {
         final db = AppDatabase();
@@ -30,7 +33,7 @@ void callbackDispatcher() {
         // Network call to backend
         final dio = Dio();
         final response = await dio.post(
-          'http://10.0.2.2:8000/api/v1/sync/push', // Using 10.0.2.2 for Android emulator -> localhost routing
+          'http://10.0.2.2:8000/api/v1/collector/sync/push', // Using 10.0.2.2 for Android emulator -> localhost routing
           data: payload,
           options: Options(
             headers: {'Authorization': 'Bearer STUB_TOKEN'}, // Should come from secure storage
@@ -42,6 +45,19 @@ void callbackDispatcher() {
           for (var item in queueItems) {
              await (db.delete(db.syncQueues)..where((t) => t.queueId.equals(item.queueId))).go();
           }
+          
+          // Now perform a pull sync
+          final pullResponse = await dio.get(
+            'http://10.0.2.2:8000/api/v1/collector/sync',
+            queryParameters: {'since': payload["last_sync_ts"]},
+            options: Options(headers: {'Authorization': 'Bearer STUB_TOKEN'})
+          );
+          
+          if (pullResponse.statusCode == 200) {
+            // Store delta changes to local DB (stubbed for now)
+            print("Successfully pulled changes: ${pullResponse.data}");
+          }
+          
           return true;
         }
       }
@@ -62,8 +78,9 @@ class SyncManager {
   }
 
   static void scheduleSync() {
+    final uniqueId = DateTime.now().millisecondsSinceEpoch.toString();
     Workmanager().registerOneOffTask(
-      "1", 
+      uniqueId, 
       syncTaskName,
       constraints: Constraints(
         networkType: NetworkType.connected,

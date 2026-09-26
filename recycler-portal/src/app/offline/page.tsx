@@ -4,7 +4,7 @@ export default function OfflineFallback() {
       <div className="text-center p-8 bg-white rounded-lg shadow max-w-md w-full">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">You are Offline</h1>
         <p className="text-gray-600 mb-6">
-          It looks like your internet connection is patchy. But don't worry! 
+          It looks like your internet connection is patchy. But don&apos;t worry! 
           You can still view cached lots and prepare quotes offline. 
           Your actions will sync automatically when you reconnect.
         </p>

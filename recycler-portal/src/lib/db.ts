@@ -8,6 +8,8 @@ export interface Lot {
   material_type: string;
   estimated_weight_kg: number;
   estimated_value_inr: number;
+  location_lat?: number;
+  location_lng?: number;
 }
 
 export interface Quote {

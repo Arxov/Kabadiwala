@@ -1,0 +1,15 @@
+{
+  "priceBoard": "Price Board",
+  "pricePerKg": "₹{price} per kg",
+  "@pricePerKg": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "speakPrice": "Hear Price",
+  "newLot": "New Lot",
+  "findRecycler": "Find Recycler",
+  "myEarnings": "My Earnings"
+}

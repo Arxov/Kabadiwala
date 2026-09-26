@@ -1,3 +1,5 @@
-# Kabadiwala
+# SIH 2026 E-Waste Marketplace (Kabadiwala)
 
-Kabadiwala project repository.
+🚀 **Live Prototype:** [https://recycler-portal.vercel.app](https://recycler-portal.vercel.app)
+
+Project repository for Kabadiwala E-Waste connect.

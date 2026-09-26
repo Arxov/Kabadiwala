@@ -1,121 +1,58 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="min-h-screen bg-gray-100 flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white shadow-md">
+        <div className="p-6">
+          <h1 className="text-2xl font-bold text-green-700">E-Waste Admin</h1>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+        <nav className="mt-6">
+          <a className="block py-2.5 px-4 rounded transition duration-200 hover:bg-green-500 hover:text-white bg-green-500 text-white" href="#">
+            Dashboard
+          </a>
+          <a className="block py-2.5 px-4 rounded transition duration-200 hover:bg-green-500 hover:text-white" href="#">
+            Recyclers
+          </a>
+          <a className="block py-2.5 px-4 rounded transition duration-200 hover:bg-green-500 hover:text-white" href="#">
+            Price Board
+          </a>
+          <a className="block py-2.5 px-4 rounded transition duration-200 hover:bg-green-500 hover:text-white" href="#">
+            Anomalies
+          </a>
+        </nav>
+      </aside>
 
-      <div className="ticks"></div>
+      {/* Main Content */}
+      <main className="flex-1 p-8">
+        <header className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-semibold text-gray-800">Dashboard Overview</h2>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-600">Admin User</span>
+            <button className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700">
+              Logout
+            </button>
+          </div>
+        </header>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-gray-500 text-sm font-medium uppercase">Total Handover Volume</h3>
+            <p className="text-3xl font-bold text-gray-800 mt-2">12,450 kg</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-gray-500 text-sm font-medium uppercase">Active Recyclers</h3>
+            <p className="text-3xl font-bold text-gray-800 mt-2">142</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow border-l-4 border-red-500">
+            <h3 className="text-gray-500 text-sm font-medium uppercase">Anomalies Detected</h3>
+            <p className="text-3xl font-bold text-red-600 mt-2">8</p>
+            <p className="text-sm text-red-500 mt-1">Requires review</p>
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      </main>
+    </div>
   )
 }
 

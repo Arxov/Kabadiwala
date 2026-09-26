@@ -1,9 +1,9 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, Boolean, DateTime, Float, ForeignKey, Integer, Text, Date
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy import Column, String, Boolean, DateTime, Float, ForeignKey, Integer, Text, Date, JSON
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import declarative_base, relationship
-from geoalchemy2 import Geometry
+from sqlalchemy import String
 
 Base = declarative_base()
 
@@ -12,7 +12,7 @@ class Collector(Base):
     collector_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     phone_hash = Column(String(64), unique=True, nullable=False)
     preferred_lang = Column(String(6), default='hi')
-    operating_area = Column(Geometry('POINT', srid=4326))
+    operating_area = Column(String(255))
     area_name = Column(String(255))
     fcm_token = Column(String(512))
     is_active = Column(Boolean, default=True)
@@ -36,7 +36,7 @@ class MaterialLot(Base):
     ml_category = Column(String(40))
     ml_confidence = Column(Float)
     status = Column(String(30), default='draft')
-    location = Column(Geometry('POINT', srid=4326))
+    location = Column(String(255))
     location_address = Column(Text)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
     updated_at = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -54,7 +54,7 @@ class LotImage(Base):
     image_hash = Column(String(64))
     is_primary = Column(Boolean, default=False)
     ml_processed = Column(Boolean, default=False)
-    ml_output = Column(JSONB)
+    ml_output = Column(JSON)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
 
     lot = relationship("MaterialLot", back_populates="images")
@@ -63,12 +63,12 @@ class Recycler(Base):
     __tablename__ = 'recyclers'
     recycler_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(255), nullable=False)
-    location = Column(Geometry('POINT', srid=4326), nullable=False)
+    location = Column(String(255), nullable=False)
     address = Column(Text)
     city = Column(String(100))
     state = Column(String(100))
     pincode = Column(String(10))
-    materials_accepted = Column(JSONB)
+    materials_accepted = Column(JSON)
     auth_number = Column(String(100))
     auth_authority = Column(String(255))
     auth_status = Column(String(30))
@@ -77,8 +77,8 @@ class Recycler(Base):
     contact_phone = Column(String(20))
     pickup_available = Column(Boolean, default=False)
     pickup_radius_km = Column(Integer)
-    service_area = Column(Geometry('POLYGON', srid=4326))
-    offered_rates = Column(JSONB)
+    service_area = Column(String(255))
+    offered_rates = Column(JSON)
     min_lot_weight_kg = Column(Float)
     rating = Column(Float, default=0)
     is_verified = Column(Boolean, default=False)
@@ -90,7 +90,7 @@ class PriceData(Base):
     price_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     category = Column(String(40), nullable=False)
     subcategory = Column(String(100))
-    location = Column(Geometry('POINT', srid=4326), nullable=False)
+    location = Column(String(255), nullable=False)
     city = Column(String(100))
     state = Column(String(100))
     date_recorded = Column(Date, nullable=False)
@@ -113,7 +113,7 @@ class Transaction(Base):
     payment_method = Column(String(30))
     payment_status = Column(String(30), default='pending')
     payment_ref = Column(String(255))
-    handover_loc = Column(Geometry('POINT', srid=4326))
+    handover_loc = Column(String(255))
     scheduled_at = Column(DateTime(timezone=True))
     completed_at = Column(DateTime(timezone=True))
     status = Column(String(30), default='initiated')
@@ -125,9 +125,9 @@ class HandoverRecord(Base):
     txn_id = Column(UUID(as_uuid=True), ForeignKey('transactions.txn_id'))
     reference_number = Column(String(30), unique=True, nullable=False)
     qr_jwt_payload = Column(Text, nullable=False)
-    photographs = Column(JSONB)
+    photographs = Column(JSON)
     actual_weight_kg = Column(Float)
-    gps_location = Column(Geometry('POINT', srid=4326))
+    gps_location = Column(String(255))
     gps_accuracy_m = Column(Integer)
     collector_ok = Column(Boolean, default=False)
     recycler_ok = Column(Boolean, default=False)
@@ -140,10 +140,10 @@ class TraceabilityEvent(Base):
     lot_id = Column(UUID(as_uuid=True), ForeignKey('material_lots.lot_id'))
     txn_id = Column(UUID(as_uuid=True))
     event_type = Column(String(50), nullable=False)
-    event_data = Column(JSONB)
+    event_data = Column(JSON)
     actor_type = Column(String(20))
     actor_id = Column(UUID(as_uuid=True))
-    location = Column(Geometry('POINT', srid=4326))
+    location = Column(String(255))
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
 
 class SyncQueue(Base):
@@ -153,7 +153,7 @@ class SyncQueue(Base):
     op_type = Column(String(20))
     entity_type = Column(String(40))
     entity_id = Column(UUID(as_uuid=True))
-    payload = Column(JSONB, nullable=False)
+    payload = Column(JSON, nullable=False)
     client_ts = Column(DateTime(timezone=True))
     status = Column(String(20), default='pending')
     retry_count = Column(Integer, default=0)

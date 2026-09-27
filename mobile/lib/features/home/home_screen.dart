@@ -23,8 +23,9 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          // FIX: Replaced Column with ListView to prevent RenderFlex overflow on small screens
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
             children: [
               _buildActionTile(
                 context, 
@@ -93,3 +94,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+

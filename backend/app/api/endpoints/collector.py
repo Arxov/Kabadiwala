@@ -4,6 +4,8 @@ from typing import Any, List
 from pydantic import BaseModel
 import uuid
 from app.db.session import get_db
+from app.core.config import settings
+import jwt
 from app.models.all import Collector, MaterialLot, PriceData, Recycler, Transaction
 
 router = APIRouter()
@@ -233,3 +235,37 @@ async def sync_push(payload: dict, db: Session = Depends(get_db)) -> Any:
 
     from datetime import datetime, timezone
     return {"server_ts": datetime.now(timezone.utc).isoformat(), "op_results": results}
+
+from pydantic import BaseModel
+class QRScan(BaseModel):
+    qr_data: str
+
+@router.post("/handover/scan-qr")
+async def scan_handover_qr(payload: QRScan, db: Session = Depends(get_db)) -> Any:
+    try:
+        from datetime import datetime, timezone
+        data = jwt.decode(payload.qr_data, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        txn_id = data.get("txn_id")
+        
+        txn = db.query(Transaction).filter(Transaction.txn_id == txn_id).first()
+        if not txn:
+            raise HTTPException(status_code=404, detail="Transaction not found")
+            
+        # Complete the handover
+        txn.status = "completed"
+        txn.completed_at = datetime.now(timezone.utc)
+        
+        # Log traceability event
+        event = TraceabilityEvent(
+            lot_id=txn.lot_id,
+            txn_id=txn.txn_id,
+            event_type="HANDOVER_COMPLETED",
+            event_data={"method": "qr_scan", "recycler_id": str(txn.recycler_id)}
+        )
+        db.add(event)
+        db.commit()
+        return {"status": "success", "message": "Handover verified cryptographically."}
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=400, detail="QR Code expired. Ask recycler to generate a new one.")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=400, detail="Invalid QR Code.")

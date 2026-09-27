@@ -2,6 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import Any
 from app.db.session import get_db
+from app.core.config import settings
+import jwt
+from datetime import datetime, timedelta, timezone
 from app.models.all import MaterialLot, Transaction, HandoverRecord
 
 router = APIRouter()
@@ -39,3 +42,18 @@ async def confirm_handover(handover_id: str, payload: dict, db: Session = Depend
 @router.get("/analytics")
 async def get_analytics(db: Session = Depends(get_db)) -> Any:
     return {"volumes": {}, "revenue": {}, "trend_charts": []}
+
+@router.post("/handover/{txn_id}/generate-qr")
+async def generate_handover_qr(txn_id: str, db: Session = Depends(get_db)) -> Any:
+    # Generates a time-limited JWT for the collector to scan
+    txn = db.query(Transaction).filter(Transaction.txn_id == txn_id).first()
+    if not txn:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+        
+    payload = {
+        "txn_id": txn_id,
+        "recycler_id": str(txn.recycler_id),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=15)
+    }
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return {"qr_data": token}

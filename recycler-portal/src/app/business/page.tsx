@@ -47,6 +47,8 @@ const partners = [
 ];
 
 export default function BusinessServices() {
+  const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -105,7 +107,7 @@ export default function BusinessServices() {
             Comprehensive waste management, EPR compliance, and circular economy solutions for modern enterprises committed to sustainability.
           </p>
           <div className="flex justify-center gap-4">
-            <button className="glass-button px-8 py-3.5 rounded-xl font-bold text-white shadow-lg">
+            <button onClick={() => setIsProposalModalOpen(true)} className="bg-md-primary text-md-on-primary px-8 py-3.5 rounded-full font-bold shadow-sm hover:shadow-md hover:bg-md-primary/90 active:scale-95 transition-all duration-300 ease-[cubic-bezier(0.2,0,0,1)]">
               Get a Proposal
             </button>
             <button className="glass-button-outline px-8 py-3.5 rounded-xl font-bold text-slate-300">

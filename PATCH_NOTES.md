@@ -1,4 +1,4 @@
-﻿# System Audit & Patch Notes (Sept 2026)
+# System Audit & Patch Notes (Sept 2026)
 
 This document outlines the critical bugs, security vulnerabilities, and architectural flaws identified and patched during the pre-launch system audit.
 
@@ -10,6 +10,7 @@ This document outlines the critical bugs, security vulnerabilities, and architec
 * **Fixed Fatal FastAPI CORS Crash:** Resolved an `AssertionError` that prevented the backend from starting. FastAPI strictly forbids using `allow_origins=["*"]` alongside `allow_credentials=True`. Updated `backend/app/main.py` to explicitly list localhost/Vite origins.
 * **Resolved Database Dialect Mismatch:** The `backend/app/db/session.py` was hardcoded to `sqlite:///./ewaste.db`, which would crash when SQLAlchemy attempted to compile PostgreSQL-specific `UUID` and `JSON` types. Re-wired the session to dynamically pull `postgresql://` credentials from `config.py`.
 * **Restored Referential Integrity:** Added missing `ForeignKey` constraints to `TraceabilityEvent.txn_id` and `SyncQueue.collector_id` in `models/all.py` to prevent orphaned rows and guarantee CPCB traceability compliance.
+* **Fixed Orphaned Record Bug on Creation:** Patched the `POST /lots` and `POST /sync/push` endpoints. Previously, material lots were created without extracting or assigning a `collector_id` from the payload, resulting in lots that didn't belong to anyone in the database.
 
 ## 3. Performance & Sync
 * **Prevented Payload OOM Bombs:** The `GET /sync` endpoint blindly returned `.all()` records. Added `isoparse(since)` filtering and `.limit(100)` chunking to prevent out-of-memory crashes on low-end collector mobile devices.

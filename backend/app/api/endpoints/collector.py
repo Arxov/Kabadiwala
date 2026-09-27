@@ -8,6 +8,19 @@ from app.models.all import Collector, MaterialLot, PriceData, Recycler, Transact
 
 router = APIRouter()
 
+from pydantic import BaseModel, Field
+from typing import Optional
+
+class LotCreate(BaseModel):
+    reference_code: Optional[str] = None
+    collector_id: str
+    category: str = "OTHER"
+    subcategory: Optional[str] = None
+    weight_kg: float = Field(default=0.0, ge=0.0)
+    condition: str = "mixed"
+    source_type: str = "residential"
+
+
 class OTPRequest(BaseModel):
     phone_number: str
 
@@ -45,17 +58,24 @@ async def get_price_trends(category: str, days: int = 30, lat: float = None, lng
     return {"trends": []}
 
 @router.post("/lots")
-async def create_lot(payload: dict, db: Session = Depends(get_db)) -> Any:
-    new_lot = MaterialLot(
-        reference_code=payload.get("reference_code", str(uuid.uuid4())[:8]),
-        collector_id=payload.get("collector_id"), # FIX: Prevent orphaned lots
-        category=payload.get("category", "OTHER"),
-        subcategory=payload.get("subcategory"),
-        weight_kg=payload.get("weight_kg", 0.0),
-        condition=payload.get("condition", "mixed"),
-        source_type=payload.get("source_type", "residential"),
-        status="draft"
-    )
+async def create_lot(payload: LotCreate, db: Session = Depends(get_db)) -> Any:
+    """
+    Create a new material lot.
+    Validates payload to prevent type errors (e.g., string for weight_kg) and negative weights.
+    """
+    try:
+        new_lot = MaterialLot(
+            reference_code=payload.reference_code or str(uuid.uuid4())[:8],
+            collector_id=payload.collector_id,
+            category=payload.category,
+            subcategory=payload.subcategory,
+            weight_kg=payload.weight_kg,
+            condition=payload.condition,
+            source_type=payload.source_type,
+            status="draft"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid data: {str(e)}")
     db.add(new_lot)
     db.commit()
     db.refresh(new_lot)

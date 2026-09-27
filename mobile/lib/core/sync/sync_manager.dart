@@ -41,9 +41,18 @@ void callbackDispatcher() {
         );
 
         if (response.statusCode == 200) {
-          // Clear successful syncs
+          // FIX: Only delete items that the server specifically confirmed as successful.
+          // Prevents permanent data loss if the server rejects a partial batch.
+          final opResults = response.data['op_results'] as List<dynamic>? ?? [];
+          final successfulIds = opResults
+              .where((res) => res['status'] == 'success')
+              .map((res) => res['id'].toString())
+              .toSet();
+
           for (var item in queueItems) {
-             await (db.delete(db.syncQueues)..where((t) => t.queueId.equals(item.queueId))).go();
+             if (successfulIds.contains(item.entityId)) {
+                await (db.delete(db.syncQueues)..where((t) => t.queueId.equals(item.queueId))).go();
+             }
           }
           
           // Now perform a pull sync

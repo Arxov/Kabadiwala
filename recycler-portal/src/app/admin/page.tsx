@@ -667,3 +667,51 @@ export function QRHandoverModal({ isOpen, onClose, txnId }: { isOpen: boolean, o
         </div>
     );
 }
+
+
+// Added for Hackathon ESG Demo
+export function ESGDashboardWidget({ impactData, leaderboard }: { impactData: any, leaderboard: any[] }) {
+    if (!impactData) return null;
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 mt-8">
+            <div className="col-span-1 lg:col-span-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 text-white shadow-lg">
+                <h2 className="text-2xl font-bold mb-4 flex items-center"><span className="text-3xl mr-2">🌍</span> Environmental Impact</h2>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                    <div className="bg-white/20 rounded-lg p-4 backdrop-blur-sm">
+                        <div className="text-3xl font-black">{impactData.co2_saved_kg} kg</div>
+                        <div className="text-sm font-medium opacity-90 uppercase tracking-wide mt-1">CO₂ Prevented</div>
+                    </div>
+                    <div className="bg-white/20 rounded-lg p-4 backdrop-blur-sm">
+                        <div className="text-3xl font-black">{impactData.toxic_metals_diverted_kg} kg</div>
+                        <div className="text-sm font-medium opacity-90 uppercase tracking-wide mt-1">Toxins Diverted</div>
+                    </div>
+                    <div className="bg-white/20 rounded-lg p-4 backdrop-blur-sm">
+                        <div className="text-3xl font-black">{impactData.trees_equivalent}</div>
+                        <div className="text-sm font-medium opacity-90 uppercase tracking-wide mt-1">Trees Equivalent</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div className="col-span-1 bg-white rounded-xl p-6 border border-gray-100 shadow-md">
+                <h2 className="text-xl font-bold mb-4 flex items-center text-gray-800"><span className="text-2xl mr-2">🏆</span> Top Collectors</h2>
+                <ul className="space-y-3">
+                    {leaderboard && leaderboard.map((collector, idx) => (
+                        <li key={idx} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-md transition-colors">
+                            <div className="flex items-center">
+                                <span className={`font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs mr-3 ${idx === 0 ? 'bg-yellow-100 text-yellow-700' : idx === 1 ? 'bg-gray-100 text-gray-600' : idx === 2 ? 'bg-orange-100 text-orange-700' : 'bg-green-50 text-green-700'}`}>
+                                    {collector.rank}
+                                </span>
+                                <div>
+                                    <div className="font-semibold text-gray-800 text-sm">{collector.collector_name}</div>
+                                    <div className="text-xs text-gray-500">{collector.badge}</div>
+                                </div>
+                            </div>
+                            <div className="font-bold text-green-600">{collector.total_weight_kg} kg</div>
+                        </li>
+                    ))}
+                    {(!leaderboard || leaderboard.length === 0) && <li className="text-center text-gray-500 py-4">No data yet</li>}
+                </ul>
+            </div>
+        </div>
+    );
+}

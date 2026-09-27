@@ -70,6 +70,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState<boolean>(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>('dashboard');
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/v1/admin/dashboard/stats')
@@ -255,11 +256,41 @@ export default function AdminDashboard() {
               <span className="glow-dot"></span>
               <span className="text-sm font-medium text-slate-400">System Online</span>
             </div>
-            <button className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center hover:bg-white/10 transition">
-              <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center hover:bg-white/10 transition"
+              >
+                <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                {/* Notification dot */}
+                <span className="absolute top-2.5 right-3 w-2 h-2 rounded-full bg-emerald-400 border border-[#060d1a]"></span>
+              </button>
+              
+              {isNotificationsOpen && (
+                <div className="absolute right-0 mt-3 w-80 bg-[#0a1122] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fade-in-scale">
+                  <div className="px-4 py-3 border-b border-white/10 flex justify-between items-center bg-white/5">
+                    <h3 className="text-sm font-bold text-white">Notifications</h3>
+                    <span className="text-xs text-emerald-400 cursor-pointer hover:text-emerald-300">Mark all as read</span>
+                  </div>
+                  <div className="max-h-80 overflow-y-auto">
+                    {stats?.recentActivity?.slice(0, 3).map((act, i) => (
+                      <div key={i} className="p-4 border-b border-white/5 hover:bg-white/5 transition flex items-start gap-3">
+                        <div className={`w-2 h-2 mt-1.5 rounded-full flex-shrink-0 ${act.status === 'success' ? 'bg-emerald-400' : 'bg-amber-400'}`}></div>
+                        <div>
+                          <p className="text-sm text-slate-300 leading-snug">{act.action}</p>
+                          <p className="text-xs text-slate-500 mt-1">{act.time}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="p-3 text-center border-t border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition">
+                    <span className="text-xs font-semibold text-slate-400">View all notifications</span>
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 p-0.5 cursor-pointer">
               <div className="w-full h-full bg-[#0a1122] rounded-[10px] flex items-center justify-center">
                 <span className="font-bold text-sm text-white">AU</span>

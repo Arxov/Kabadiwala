@@ -643,7 +643,7 @@ export default function AdminDashboard() {
 }
 
 // Added for Hackathon Demo
-export function QRHandoverModal({ isOpen, onClose, txnId }: { isOpen: boolean, onClose: () => void, txnId: string }) {
+function QRHandoverModal({ isOpen, onClose, txnId }: { isOpen: boolean, onClose: () => void, txnId: string }) {
     if (!isOpen) return null;
     
     // In a real app, this would fetch from /api/v1/handover/${txnId}/generate-qr
@@ -670,7 +670,7 @@ export function QRHandoverModal({ isOpen, onClose, txnId }: { isOpen: boolean, o
 
 
 // Added for Hackathon ESG Demo
-export function ESGDashboardWidget({ impactData, leaderboard }: { impactData: any, leaderboard: any[] }) {
+function ESGDashboardWidget({ impactData, leaderboard }: { impactData: any, leaderboard: any[] }) {
     if (!impactData) return null;
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 mt-8">

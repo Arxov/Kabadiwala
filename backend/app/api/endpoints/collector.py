@@ -140,13 +140,21 @@ async def sync_pull(since: str = None, db: Session = Depends(get_db)) -> Any:
     if since:
         try:
             since_dt = isoparse(since)
-            # Assuming models have updated_at or created_at. Fallback to created_at if updated_at is missing.
+            # FIX: Properly fallback to created_at since PriceData lacks updated_at
             if hasattr(PriceData, 'updated_at'):
                 price_query = price_query.filter(PriceData.updated_at >= since_dt)
+            elif hasattr(PriceData, 'created_at'):
+                price_query = price_query.filter(PriceData.created_at >= since_dt)
+                
             if hasattr(Recycler, 'updated_at'):
                 recycler_query = recycler_query.filter(Recycler.updated_at >= since_dt)
+            elif hasattr(Recycler, 'created_at'):
+                recycler_query = recycler_query.filter(Recycler.created_at >= since_dt)
+                
             if hasattr(Transaction, 'updated_at'):
                 txn_query = txn_query.filter(Transaction.updated_at >= since_dt)
+            elif hasattr(Transaction, 'created_at'):
+                txn_query = txn_query.filter(Transaction.created_at >= since_dt)
         except ValueError:
             pass # Ignore invalid date formats and return all for fallback
 

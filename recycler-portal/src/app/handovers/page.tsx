@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Navigation from '@/components/Navigation';
 import QRVerifierScanner from '@/components/QRVerifierScanner';
+import TransactionTimeline from '@/components/TransactionTimeline';
 import EPRCertificateModal, { EPRCertificateData } from '@/components/EPRCertificateModal';
 import { db } from '@/lib/db';
 import { seedDatabaseIfEmpty } from '@/lib/mockData';
@@ -205,6 +206,12 @@ export default function HandoversPage() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 flex-1">
+        {/* 9-Stage Transaction State Machine Status Visualizer (Section 32 of Master Spec) */}
+        <TransactionTimeline
+          currentStage="HANDOVER_VERIFIED"
+          className="shadow-xl shadow-black/40"
+        />
+
         {/* Live Verifier Scanner Component */}
         <section id="verifier-scanner">
           <QRVerifierScanner />

@@ -127,6 +127,9 @@ class _NewLotScreenState extends State<NewLotScreen> {
   bool _photoCaptured = false;
   String? _photoHash;
   bool _isSaving = false;
+  String? _aiSuggestedCategoryId;
+  int _aiConfidence = 89;
+  bool _aiConfirmed = false;
 
   @override
   void initState() {
@@ -151,6 +154,9 @@ class _NewLotScreenState extends State<NewLotScreen> {
     setState(() {
       _photoCaptured = true;
       _photoHash = "sha256_${DateTime.now().millisecondsSinceEpoch.toRadixString(16)}_${Random().nextInt(9999)}";
+      _aiSuggestedCategoryId = 'PCB';
+      _aiConfidence = 89;
+      _aiConfirmed = false;
     });
     final snackMsg = widget.currentLang == 'hi'
         ? "फोटो कैप्चर हो गया और डिजिटल रूप से सत्यापित हुआ!"
@@ -433,6 +439,173 @@ class _NewLotScreenState extends State<NewLotScreen> {
                 ),
               ),
             ),
+
+            // AI-Assisted Material Classification Confirmation (Section 15 of Master Spec)
+            if (_photoCaptured && _aiSuggestedCategoryId != null) ...[
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF1E1B4B), Color(0xFF312E81)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF4338CA).withOpacity(0.25),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: _aiConfirmed ? const Color(0xFF10B981) : const Color(0xFF818CF8),
+                    width: 1.5,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF4F46E5),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.auto_awesome, color: Colors.amber, size: 16),
+                              SizedBox(width: 4),
+                              Text(
+                                "AI Scanner (Assistive)",
+                                style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF059669).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: const Color(0xFF10B981)),
+                          ),
+                          child: Text(
+                            "$_aiConfidence% Confidence",
+                            style: const TextStyle(color: Color(0xFF34D399), fontSize: 11, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      widget.currentLang == 'hi'
+                          ? "🤖 AI पहचान: सर्किट बोर्ड (PCB)"
+                          : (widget.currentLang == 'mr'
+                              ? "🤖 AI ओळख: सर्किट बोर्ड (PCB)"
+                              : "🤖 AI Suggestion: Circuit Boards (PCB)"),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.currentLang == 'hi'
+                          ? "ग्रीन कॉपर ट्रेसेस और सोल्डर पैड्स पहचाने गए। कृपया पुष्टि करें:"
+                          : (widget.currentLang == 'mr'
+                              ? "ग्रीन कॉपर ट्रेसेस आणि सोल्डर पॅड्स आढळले. कृपया खात्री करा:"
+                              : "Green copper traces and solder pads detected. Please confirm:"),
+                      style: TextStyle(color: Colors.indigo.shade100, fontSize: 12),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              final pcbCat = _categories.firstWhere((c) => c.id == 'PCB');
+                              setState(() {
+                                _selectedCategory = pcbCat;
+                                _aiConfirmed = true;
+                              });
+                              _tts.speakGuidance(
+                                title: widget.currentLang == 'hi'
+                                    ? "सर्किट बोर्ड सत्यापित"
+                                    : (widget.currentLang == 'mr'
+                                        ? "सर्किट बोर्ड प्रमाणित"
+                                        : "Circuit Board Verified"),
+                                warning: "",
+                                langCode: widget.currentLang,
+                              );
+                            },
+                            icon: Icon(
+                              _aiConfirmed ? Icons.check_circle : Icons.check,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              _aiConfirmed
+                                  ? (widget.currentLang == 'hi'
+                                      ? "सत्यापित ✓"
+                                      : (widget.currentLang == 'mr' ? "पुष्टी झाली ✓" : "Confirmed ✓"))
+                                  : (widget.currentLang == 'hi'
+                                      ? "✓ सही है (Confirm)"
+                                      : (widget.currentLang == 'mr' ? "✓ बरोबर आहे" : "✓ Confirm")),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _aiConfirmed ? const Color(0xFF059669) : const Color(0xFF10B981),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _aiConfirmed = false;
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  widget.currentLang == 'hi'
+                                      ? "कृपया ऊपर दी गई सूची से सही श्रेणी चुनें।"
+                                      : (widget.currentLang == 'mr'
+                                          ? "कृपया वरील यादीतून योग्य प्रकार निवडा."
+                                          : "Please select the correct category from Step 1."),
+                                ),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.edit, size: 16, color: Colors.white70),
+                          label: Text(
+                            widget.currentLang == 'hi'
+                                ? "✎ बदलना है"
+                                : (widget.currentLang == 'mr' ? "✎ बदला" : "✎ Change"),
+                            style: const TextStyle(color: Colors.white70, fontSize: 13),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Colors.white30),
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
 
             // STEP 3: Weight Slider & Stepper

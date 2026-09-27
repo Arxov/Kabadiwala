@@ -20,6 +20,10 @@ class RecyclerProfile {
   final String contactPhone;
   final String locationAddress;
   final Map<String, double> rates;
+  final int matchScore;
+  final List<String> matchReasonsEn;
+  final List<String> matchReasonsHi;
+  final List<String> matchReasonsMr;
 
   const RecyclerProfile({
     required this.id,
@@ -33,7 +37,17 @@ class RecyclerProfile {
     required this.contactPhone,
     required this.locationAddress,
     required this.rates,
+    required this.matchScore,
+    required this.matchReasonsEn,
+    required this.matchReasonsHi,
+    required this.matchReasonsMr,
   });
+
+  List<String> getMatchReasons(String lang) {
+    if (lang == 'hi') return matchReasonsHi;
+    if (lang == 'mr') return matchReasonsMr;
+    return matchReasonsEn;
+  }
 }
 
 class _RecyclerListScreenState extends State<RecyclerListScreen> {
@@ -57,6 +71,25 @@ class _RecyclerListScreenState extends State<RecyclerListScreen> {
         'Batteries': 145.0,
         'Motors': 110.0,
       },
+      matchScore: 96,
+      matchReasonsEn: [
+        'CPCB Govt Authorized (+30%)',
+        '2.8km Nearby Proximity (+28%)',
+        'Doorstep EV Pickup (+20%)',
+        'Top Rate: ₹225/kg for PCB (+18%)',
+      ],
+      matchReasonsHi: [
+        'CPCB सरकारी अधिकृत (+30%)',
+        '2.8 किमी निकटता (+28%)',
+        'डोरस्टेप पिकअप उपलब्ध (+20%)',
+        'PCB का सर्वाधिक भाव (+18%)',
+      ],
+      matchReasonsMr: [
+        'CPCB सरकारी अधिकृत (+30%)',
+        '2.8 किमी जवळील अंतर (+28%)',
+        'घरी मोफत पिकअप (+20%)',
+        'PCB चा सर्वोच्च दर (+18%)',
+      ],
     ),
     RecyclerProfile(
       id: 'rec-cpcb-02',
@@ -75,6 +108,25 @@ class _RecyclerListScreenState extends State<RecyclerListScreen> {
         'Plastics': 26.0,
         'PCB': 218.0,
       },
+      matchScore: 88,
+      matchReasonsEn: [
+        'MPCB State License (+30%)',
+        '5.4km Distance (+20%)',
+        'Large Batch Capacity (+20%)',
+        'LCD/CRT Specialty (+18%)',
+      ],
+      matchReasonsHi: [
+        'MPCB राज्य लाइसेंस (+30%)',
+        '5.4 किमी दूरी (+20%)',
+        'बड़ा बैच क्षमता (+20%)',
+        'स्क्रीन/मॉनिटर विशेषज्ञ (+18%)',
+      ],
+      matchReasonsMr: [
+        'MPCB राज्य परवाना (+30%)',
+        '5.4 किमी अंतर (+20%)',
+        'मोठी बॅच क्षमता (+20%)',
+        'स्क्रीन/मॉनिटर स्पेशलिस्ट (+18%)',
+      ],
     ),
     RecyclerProfile(
       id: 'rec-cpcb-03',
@@ -92,6 +144,23 @@ class _RecyclerListScreenState extends State<RecyclerListScreen> {
         'Motors': 115.0,
         'Batteries': 150.0,
       },
+      matchScore: 82,
+      matchReasonsEn: [
+        'CPCB EPR Registered (+30%)',
+        'Premium Battery Rate (+25%)',
+        'Copper Cable Specialist (+27%)',
+      ],
+      matchReasonsHi: [
+        'CPCB EPR पंजीकृत (+30%)',
+        'बैटरी का उच्च भाव (+25%)',
+        'तांबे के तार विशेषज्ञ (+27%)',
+      ],
+      matchReasonsMr: [
+        'CPCB EPR नोंदणीकृत (+30%)',
+        'बॅटरीचा चांगला दर (+25%)',
+        'तांबे तारांचे स्पेशलिस्ट (+27%)',
+      ],
+    ),
     ),
   ];
 
@@ -234,7 +303,85 @@ class _RecyclerListScreenState extends State<RecyclerListScreen> {
                       Text("(${rec.authority})", style: TextStyle(fontSize: 11, color: Colors.grey[600])),
                     ],
                   ),
-                  const SizedBox(height: 10),
+
+                  // Match Explainability Banner (Section 26 & 54 of Master Spec)
+                  Container(
+                    margin: const EdgeInsets.only(top: 8, bottom: 8),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0FDF4),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFF86EFAC)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF059669),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.bolt, color: Colors.white, size: 14),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    "${rec.matchScore}% Match",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              widget.currentLang == 'hi'
+                                  ? "रीसाइक्लर क्यों चुना गया?"
+                                  : (widget.currentLang == 'mr'
+                                      ? "हा रीसायकलर का?"
+                                      : "Why this recycler?"),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: Color(0xFF166534),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 4,
+                          children: rec.getMatchReasons(widget.currentLang).map((reason) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: const Color(0xFFBBF7D0)),
+                              ),
+                              child: Text(
+                                "✓ $reason",
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Color(0xFF15803D),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
 
                   // Rates Offered Strip
                   Container(

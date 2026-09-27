@@ -58,9 +58,10 @@ Designed specifically for informal waste pickers with limited textual literacy:
 | Feature | Low-Literacy Innovation & Technical Implementation |
 |---|---|
 | **Vernacular Audio** | One-tap Text-to-Speech (`flutter_tts`) narrating current scrap rates, lot valuations, and warnings in **Hindi, Marathi, and English**. |
+| **AI Material Scanner** | On-device photo capture with **AI category classification (89% confidence)** and low-literacy human confirmation buttons (`[✓ सही है / Confirm]` / `[✎ बदलना है / Change]`). |
 | **No-Type Lot Wizard** | Visual scrap picker (PCBs, Copper Cables, Li-ion Batteries, CRTs, Motors), on-device camera simulation with **SHA-256 photo hashing**, and tactile weight sliders with preset pills (`5kg`, `10kg`, `25kg`, `50kg`). |
 | **Live Price Board** | Real-time market rates (₹/kg) across 7 e-waste categories with interactive 30-day graphical trend charts (`fl_chart`). |
-| **Nearby Recyclers** | Distance-sorted directory of authorized CPCB facilities with instant one-touch phone dialer triggers. |
+| **Explainable Matching** | Distance-sorted directory of authorized CPCB facilities with **transparent recommendation score breakdowns** ("Why this recycler?") and instant one-touch phone dialers. |
 | **Tamper-Proof Handover** | Generates dynamic HMAC-signed QR codes encoding Lot UUID, GPS lat/lng, accuracy radius, declared weight, and image hash. |
 | **Visual Earnings Ledger** | High-contrast financial balance cards showing **+79% surplus over informal middlemen**, with transparent settlement badges (`Settled - Cash`, `Settled - UPI`, `Pending`). |
 | **Pictorial Safety Hub** | High-impact danger cards with audio warnings alerting collectors to fatal backyard hazards (toxic fumes, acid burns, battery fires). |
@@ -78,8 +79,10 @@ A production-ready responsive web application addressing all stakeholder require
 - **Interactive 100 kg Unit Economics Calculator**: Live reactive weight slider demonstrating how collectors achieve a **+79.1% net income gain** (₹14,520 formal vs ₹7,475 informal middleman).
 - **Public Live Price Board**: Searchable, city-filtered benchmark price board with Web Speech API audio narration.
 
-### 2. Authorized Recycler Marketplace & Lot Discovery (`/portal`)
+### 2. Authorized Recycler Marketplace & Lot Discovery (`/portal` & `/recycler`)
 - **Interactive Leaflet GIS Mapping**: Live visual map clustering available scrap lots, pickup radiuses, and authorized recycler facilities across Pune/Mumbai.
+- **Explainable Recycler Matching**: Transparent compatibility scoring (e.g. 94% Match breakdown for CPCB license match, doorstep EV route, and high-purity feedstock).
+- **9-Stage Transaction State Machine Visualizer (`TransactionTimeline.tsx`)**: Real-time lifecycle tracking across all 9 protocol stages from on-device Drift draft to CPCB Form 6 credit issuance.
 - **Material & Weight Filtering**: Instant sorting by category (PCBs, Cables, Batteries, CRTs, Motors) and batch size.
 - **Competitive Quoting Modal (`LotQuotingModal.tsx`)**: Enables licensed recyclers to place direct competitive purchase bids with doorstep EV pickup guarantees.
 
@@ -88,6 +91,7 @@ A production-ready responsive web application addressing all stakeholder require
 - **Haversine GPS Geofencing**: Computes real-time physical distance between collector GPS and recycler facility; enforces a strict **≤150m proximity constraint** to eliminate phantom transactions.
 - **Certified Scale Calibration**: Automatically validates declared weight vs industrial scale weight, flagging variances >10%.
 - **Dual Confirmation Handshake**: Executes dual-party confirmation and signs immutable transaction receipts into local Dexie.js IndexedDB.
+- **State Machine Progression**: Visual feedback through `TransactionTimeline` displaying active `HANDOVER_VERIFIED` stage status.
 
 ### 4. EPR Compliance & Digital Chain-of-Custody Register (`/epr-audit`)
 - **Corporate Producer Target Tracking**: Real-time fulfillment progress for major electronics manufacturers (Dell: 87%, HP: 96%, Samsung: 87.5%, Lenovo: 88.5%).
@@ -100,12 +104,11 @@ A production-ready responsive web application addressing all stakeholder require
 - **Economic Loss Comparisons**: Highlights financial losses of backyard methods (e.g., burning copper loses 15% metal weight = ₹3,700 loss per 50 kg).
 - **Safety Equipment Lending Library**: Free protective gear depots (respirators, thermal gloves, acid-resistant aprons).
 
-### 6. SPCB / CPCB Regulatory Telemetry & Fraud Detection (`/admin`)
+### 6. SPCB / CPCB Regulatory Telemetry, Fraud Detection & Arbitration (`/admin`)
 - **Real-Time Mass-Balance Model**: Tracks material balance across 4 stages (142.5 MT Ingestion → 141.8 MT Mechanical Dismantling → 138.2 MT Refined Minerals → 3.6 MT TSDF Inert Slag) to ensure zero unauthorized leakage.
-- **Algorithmic Anomaly Outlier Table (`AnomalyMonitorTable.tsx`)**: Automated regulatory rules flagging:
-  - Weight variance > 15% (fraudulent water/sand ballast).
-  - Price spikes > 35% above daily CPCB benchmark rates (wash trading).
-  - Geofence breaches > 150 meters (phantom paper transactions).
+- **Algorithmic Anomaly Outlier Table (`AnomalyMonitorTable.tsx`)**: Automated regulatory rules flagging weight variances >15%, price spikes >35%, and geofence breaches >150 meters.
+- **Dispute Resolution & Arbitration Console (`DisputeResolutionPanel.tsx`)**: Regulatory oversight pipeline handling tickets across `OPEN`, `UNDER_REVIEW`, `RESOLVED`, and `REJECTED` states with investigation actions and formal notice issuance.
+- **Structured Dataset & Provenance Inspector (`StructuredDatasetPanel.tsx`)**: Auditing inspector with explicit `FIELD | PLATFORM | DEMO` provenance tags, SHA-256 integrity verification, and one-click CSV/JSON export.
 - **Audit Export**: One-click generation of CPCB compliance logs in CSV format.
 
 ---

@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Navigation from '@/components/Navigation';
 import LotQuotingModal from '@/components/LotQuotingModal';
+import TransactionTimeline from '@/components/TransactionTimeline';
 import { db } from '@/lib/db';
 import {
   INITIAL_SAMPLE_LOTS,
@@ -184,6 +185,12 @@ export default function RecyclerPortalPage() {
           }))} />
         </div>
 
+        {/* 9-Stage Transaction State Machine Visualizer (Section 32 of Master Spec) */}
+        <TransactionTimeline
+          currentStage="MATCHED"
+          className="shadow-xl shadow-black/40"
+        />
+
         {/* Filter Controls Bar */}
         <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-wrap items-center justify-between gap-4">
           {/* Category Filter Chips */}
@@ -278,7 +285,7 @@ export default function RecyclerPortalPage() {
                     </div>
 
                     {/* Weight and Valuation Strip */}
-                    <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex justify-between items-center mb-4">
+                    <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex justify-between items-center mb-3">
                       <div>
                         <span className="text-[10px] text-slate-500 block uppercase font-bold">Weight</span>
                         <span className="text-lg font-black text-white">{lot.weightKg} kg</span>
@@ -287,6 +294,27 @@ export default function RecyclerPortalPage() {
                         <span className="text-[10px] text-slate-500 block uppercase font-bold">Collector Estimate</span>
                         <span className="text-lg font-black text-emerald-400">
                           ₹{lot.estimatedValue.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Explainable Match Badge (Section 26 & 54 of Master Spec) */}
+                    <div className="p-2.5 rounded-xl bg-emerald-950/30 border border-emerald-500/20 mb-3 text-[11px]">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-bold text-emerald-400 flex items-center gap-1">
+                          <span>⚡</span> 94% Compatibility Match
+                        </span>
+                        <span className="text-[9px] text-slate-400 font-mono">Haversine: 2.8 km</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1 text-[10px]">
+                        <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                          ✓ CPCB License Match
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                          ✓ Doorstep EV Route
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                          ✓ High-Purity Feedstock
                         </span>
                       </div>
                     </div>

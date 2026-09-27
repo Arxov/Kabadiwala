@@ -1,0 +1,58 @@
+{
+  "appTitle": "ई-कचरा कनेक्ट",
+  "tagline": "योग्य भाव • सुरक्षित पुनर्वापर • थेट मोबदला",
+  "collectorId": "कबाडीवाला आयडी",
+  "verifiedBadge": "SPCB अधिकृत संकलक",
+  "offlineMode": "ऑफलाइन मोड (फोनमध्ये जतन)",
+  "onlineMode": "ऑनलाइन (CPCB शी जोडलेले)",
+  "language": "भाषा",
+  "hindi": "हिंदी",
+  "marathi": "मराठी",
+  "english": "English",
+  "priceBoard": "आजचा भाव फलक",
+  "pricePerKg": "₹{price} / किलो",
+  "@pricePerKg": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "speakPrice": "भाव ऐका",
+  "newLot": "नवीन स्क्रॅप लॉट",
+  "findRecycler": "अधिकृत रीसायकलर्स",
+  "myEarnings": "माझी कमाई",
+  "safetyRules": "सुरक्षा नियम",
+  "hearGuidance": "मार्गदर्शन ऐका",
+  "selectCategory": "कचरा प्रकार निवडा",
+  "takePhoto": "सामानचा फोटो काढा",
+  "approxWeight": "अंदाजे वजन (किलो)",
+  "instantValue": "अंदाजे त्वरित किंमत",
+  "createLotBtn": "लॉट जतन करा आणि दर मिळवा",
+  "categoryPcb": "सर्किट बोर्ड (PCB)",
+  "categoryCables": "तांब्याच्या तारा / केबल्स",
+  "categoryBattery": "बॅटरी (लिथियम / लेड)",
+  "categoryCrt": "सीआरटी मॉनिटर / टीव्ही",
+  "categoryLcd": "एलसीडी / एलईडी स्क्रीन",
+  "categoryMotors": "मोटार आणि कॉइल्स",
+  "categoryPlastics": "ई-कचरा प्लास्टिक",
+  "handoverQr": "हस्तांतरण क्यूआर कोड",
+  "showToRecycler": "माल देताना अधिकृत रीसायकलरला हा क्यूआर कोड स्कॅन करू द्या",
+  "cashReceived": "रोख मिळाली",
+  "pendingDues": "बाकी रक्कम",
+  "totalEarned": "एकूण कमाई",
+  "dangerCableBurn": "केबल्स कधीही जाळू नका! जाळल्याने १५% तांबे जळून जाते आणि विषारी धूर फुफ्फुसांना हानी पोहोचवतो. संपूर्ण वायर विका आणि जास्त नफा मिळवा.",
+  "dangerAcidBath": "सर्किट बोर्डवर कधीही ॲसिड टाकू नका! ॲसिडमुळे डोळे आणि हात भाजतात आणि दुर्मिळ धातू नष्ट होतात. थेट अधिकृत कारखान्याला विका.",
+  "dangerCrtBreak": "जुने टीव्ही किंवा मॉनिटर फोडू नका! फुटल्याने विषारी काच आणि शिसे पसरते.",
+  "dangerBatteryFire": "बॅटरी कधीही कापू किंवा तोडू नका! लिथियम हवेशी संपर्क येताच स्फोटक आग पकडते.",
+  "callRecycler": "कॉल करा",
+  "doorstepPickup": "दारात मोफत पिकअप उपलब्ध",
+  "kmAway": "{distance} किमी अंतरावर",
+  "@kmAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "appTitle": "ई-कचरा कनेक्ट",
+  "tagline": "सही भाव • सुरक्षित रीसाइक्लिंग • तुरंत भुगतान",
+  "collectorId": "कबाड़ीवाला आईडी",
+  "verifiedBadge": "SPCB अधिकृत कबाड़ीवाला",
+  "offlineMode": "ऑफ़लाइन मोड (स्थानीय रूप से सुरक्षित)",
+  "onlineMode": "ऑनलाइन (CPCB से कनेक्टेड)",
+  "language": "भाषा",
+  "hindi": "हिंदी",
+  "marathi": "मराठी",
+  "english": "English",
+  "priceBoard": "आज का भाव फलक",
+  "pricePerKg": "₹{price} / किलो",
+  "@pricePerKg": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "speakPrice": "भाव सुनें",
+  "newLot": "नया स्क्रैप लॉट",
+  "findRecycler": "मान्यता प्राप्त रीसाइक्लर",
+  "myEarnings": "मेरी कमाई",
+  "safetyRules": "सुरक्षा नियम",
+  "hearGuidance": "सलाह सुनें",
+  "selectCategory": "कचरा श्रेणी चुनें",
+  "takePhoto": "सामान का फोटो लें",
+  "approxWeight": "अनुमानित वजन (किलो)",
+  "instantValue": "अनुमानित तुरंत मूल्य",
+  "createLotBtn": "लॉट सेव करें और भाव पाएं",
+  "categoryPcb": "सर्किट बोर्ड (PCB)",
+  "categoryCables": "तांबे के तार / केबल",
+  "categoryBattery": "बैटरी (लिथियम / लेड)",
+  "categoryCrt": "सीआरटी मॉनिटर / टीवी",
+  "categoryLcd": "एलसीडी / एलईडी स्क्रीन",
+  "categoryMotors": "मोटर और ट्रांसफॉर्मर",
+  "categoryPlastics": "ई-कचरा प्लास्टिक",
+  "handoverQr": "हैंडओवर क्यूआर कोड",
+  "showToRecycler": "माल देते समय रीसाइक्लर को यह क्यूआर कोड स्कैन कराएं",
+  "cashReceived": "नकद मिला",
+  "pendingDues": "बाकी भुगतान",
+  "totalEarned": "कुल कमाई",
+  "dangerCableBurn": "तारों को कभी न जलाएं! जलने से 15% तांबा उड़ जाता है और जहरीला धुंआ फेफड़ों को नुकसान पहुंचाता है। सीधा बेचें और ज्यादा पैसे पाएं।",
+  "dangerAcidBath": "सर्किट बोर्ड पर कभी तेजाब न डालें! तेजाब से हाथ जलते हैं और कीमती धातुएं नष्ट होती हैं। अधिकृत रीसाइक्लर को सीधा बेचें।",
+  "dangerCrtBreak": "पुराने टीवी और मॉनिटर को न तोड़ें! इससे जहरीला शीशा और लेड पाउडर आंखों और सांस में जाता है।",
+  "dangerBatteryFire": "बैटरी को न तोड़ें और न छेदें! लिथियम हवा के संपर्क में आते ही भयंकर आग पकड़ता है।",
+  "callRecycler": "कॉल करें",
+  "doorstepPickup": "घर पहुंच पिकअप उपलब्ध",
+  "kmAway": "{distance} किमी दूर",
+  "@kmAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  }
+}

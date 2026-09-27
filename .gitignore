@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Next.js & Web builds
+.next/
+out/
+build/
+dist/
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# Generated PWA assets
+public/sw.js
+public/worker-*.js
+public/sw.js.map
+recycler-portal/public/sw.js
+recycler-portal/public/worker-*.js
+recycler-portal/public/sw.js.map
+
+# Flutter & Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+mobile/build/
+*.iml
+
+# IDE & OS
+.idea/
+.vscode/
+.claude/
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment & Local Secrets
+.env
+.env*.local
+*.pem

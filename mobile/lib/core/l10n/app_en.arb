@@ -1,0 +1,58 @@
+{
+  "appTitle": "E-Waste Connect",
+  "tagline": "Fair Prices • Safe Recycling • Direct Payments",
+  "collectorId": "Collector ID",
+  "verifiedBadge": "SPCB Authorized Collector",
+  "offlineMode": "Offline Mode (Saved Locally)",
+  "onlineMode": "Online (Synced with CPCB)",
+  "language": "Language",
+  "hindi": "हिंदी",
+  "marathi": "मराठी",
+  "english": "English",
+  "priceBoard": "Price Board",
+  "pricePerKg": "₹{price} / kg",
+  "@pricePerKg": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "speakPrice": "Hear Price",
+  "newLot": "New Scrap Lot",
+  "findRecycler": "Authorized Recyclers",
+  "myEarnings": "My Earnings",
+  "safetyRules": "Safety Rules",
+  "hearGuidance": "Hear Guidance",
+  "selectCategory": "Select Scrap Category",
+  "takePhoto": "Take Scrap Photo",
+  "approxWeight": "Approximate Weight",
+  "instantValue": "Instant Estimated Value",
+  "createLotBtn": "Save & Get Best Offers",
+  "categoryPcb": "Circuit Boards (PCBs)",
+  "categoryCables": "Copper Cables",
+  "categoryBattery": "Batteries (Li-ion/Lead)",
+  "categoryCrt": "CRT Monitors / TVs",
+  "categoryLcd": "LCD / LED Screens",
+  "categoryMotors": "Motors & Coils",
+  "categoryPlastics": "E-Waste Plastics",
+  "handoverQr": "Handover QR Code",
+  "showToRecycler": "Show this QR code to the authorized recycler at pickup",
+  "cashReceived": "Cash Received",
+  "pendingDues": "Pending Dues",
+  "totalEarned": "Total Earned",
+  "dangerCableBurn": "NEVER burn cables in open air! Burning loses 15% copper weight and releases toxic cancer-causing dioxins. Sell whole wire for higher rate.",
+  "dangerAcidBath": "NEVER use acid baths on PCBs! Acids cause blindess, chemical burns and destroy rare metals. Certified recyclers pay full fair value.",
+  "dangerCrtBreak": "DO NOT smash CRT monitors! Vacuum implosion shoots sharp glass and poisonous lead/phosphor powder.",
+  "dangerBatteryFire": "DO NOT puncture batteries! Lithium catches fire instantly on contact with air. Keep terminals taped.",
+  "callRecycler": "Call Recycler",
+  "doorstepPickup": "Free Doorstep Pickup",
+  "kmAway": "{distance} km away",
+  "@kmAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  }
+}

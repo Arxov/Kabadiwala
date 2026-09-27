@@ -229,6 +229,46 @@ export default function BusinessServices() {
           </div>
         </div>
       </footer>
+      <ProposalModal isOpen={isProposalModalOpen} onClose={() => setIsProposalModalOpen(false)} />
     </main>
+  );
+}
+
+
+function ProposalModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+      <div className="bg-md-surface-container w-full max-w-lg rounded-[28px] shadow-xl overflow-hidden animate-slide-up">
+        <div className="p-8">
+          <h2 className="text-3xl font-bold text-md-on-background mb-2">Request Proposal</h2>
+          <p className="text-md-on-surface-variant mb-6">Our enterprise team will reach out with a custom EPR compliance plan within 24 hours.</p>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-md-on-surface-variant mb-1">Company Name</label>
+              <input type="text" className="w-full bg-md-surface-container-low border-b-2 border-transparent focus:border-b-md-primary focus:ring-0 rounded-t-[12px] rounded-b-none h-14 px-4 transition-colors text-md-on-background" placeholder="Acme Corp" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-md-on-surface-variant mb-1">Estimated Annual E-Waste (Tons)</label>
+              <input type="number" className="w-full bg-md-surface-container-low border-b-2 border-transparent focus:border-b-md-primary focus:ring-0 rounded-t-[12px] rounded-b-none h-14 px-4 transition-colors text-md-on-background" placeholder="50" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-md-on-surface-variant mb-1">Work Email</label>
+              <input type="email" className="w-full bg-md-surface-container-low border-b-2 border-transparent focus:border-b-md-primary focus:ring-0 rounded-t-[12px] rounded-b-none h-14 px-4 transition-colors text-md-on-background" placeholder="leader@acmecorp.com" />
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-3 mt-8">
+            <button onClick={onClose} className="px-6 py-2.5 rounded-full font-medium text-md-primary hover:bg-md-primary/10 active:scale-95 transition-all">
+              Cancel
+            </button>
+            <button onClick={() => { alert("Proposal requested successfully!"); onClose(); }} className="px-6 py-2.5 rounded-full font-medium bg-md-primary text-md-on-primary hover:bg-md-primary/90 shadow-sm active:scale-95 transition-all">
+              Submit Request
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

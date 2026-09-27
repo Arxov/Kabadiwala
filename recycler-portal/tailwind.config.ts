@@ -9,18 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'md-primary': '#6750A4',
-        'md-on-primary': '#FFFFFF',
-        'md-secondary-container': '#E8DEF8',
-        'md-on-secondary-container': '#1D192B',
-        'md-tertiary': '#7D5260',
-        'md-background': '#FFFBFE',
-        'md-on-background': '#1C1B1F',
-        'md-surface': '#FFFBFE',
-        'md-surface-container': '#F3EDF7',
-        'md-surface-container-low': '#E7E0EC',
-        'md-outline': '#79747E',
-        'md-on-surface-variant': '#49454F',
+        'lux-bg': '#F9F8F6',
+        'lux-fg': '#1A1A1A',
+        'lux-muted': '#EBE5DE',
+        'lux-muted-fg': '#6C6863',
+        'lux-gold': '#D4AF37',
+      },
+      fontFamily: {
+        'serif': ['"Playfair Display"', 'serif'],
+        'sans': ['Inter', 'sans-serif'],
       },
       colors: {
         background: "var(--background)",

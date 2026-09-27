@@ -170,7 +170,11 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex font-sans">
+    <div className="min-h-screen bg-md-background text-md-on-background relative overflow-hidden flex flex-col">
+      {/* MD3 Atmospheric Blur Shapes */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-md-primary/10 blur-3xl mix-blend-multiply pointer-events-none md-blur-shape" aria-hidden="true" />
+      <div className="absolute top-[20%] right-[-5%] w-[30%] h-[50%] rounded-full bg-md-secondary-container/30 blur-3xl mix-blend-multiply pointer-events-none" aria-hidden="true" />
+
       {/* ─── SIDEBAR ─── */}
       <aside className={`${sidebarCollapsed ? 'w-20' : 'w-72'} bg-[#060d1a]/80 backdrop-blur-xl border-r border-white/5 flex flex-col transition-all duration-300 relative hidden md:flex`}>
         {/* Logo */}

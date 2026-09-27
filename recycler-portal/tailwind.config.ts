@@ -14,15 +14,14 @@ const config: Config = {
         'lux-muted': '#EBE5DE',
         'lux-muted-fg': '#6C6863',
         'lux-gold': '#D4AF37',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
       },
       fontFamily: {
         'serif': ['"Playfair Display"', 'serif'],
         'sans': ['Inter', 'sans-serif'],
       },
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
+
     },
   },
   plugins: [],

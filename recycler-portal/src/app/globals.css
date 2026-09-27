@@ -304,3 +304,76 @@ textarea::placeholder {
   transform: translate(-50%, -50%);
   animation: float 18s ease-in-out infinite 3s;
 }
+
+/* ─── LIGHT MODE OVERRIDES ─── */
+.light {
+  --bg-deep: #f1f5f9;
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-elevated: #e2e8f0;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.15);
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+}
+
+/* Force light mode text and backgrounds for hardcoded utility classes */
+.light body { background-color: #f1f5f9; }
+.light .text-white { color: #0f172a !important; }
+.light .text-slate-300 { color: #334155 !important; }
+.light .text-slate-400 { color: #475569 !important; }
+.light .text-slate-500 { color: #64748b !important; }
+.light .bg-slate-800 { background-color: #cbd5e1 !important; }
+.light .bg-white\/5 { background-color: rgba(0, 0, 0, 0.04) !important; }
+.light .bg-white\/10 { background-color: rgba(0, 0, 0, 0.08) !important; }
+.light .hover\:bg-white\/5:hover { background-color: rgba(0, 0, 0, 0.06) !important; }
+.light .hover\:bg-white\/10:hover { background-color: rgba(0, 0, 0, 0.12) !important; }
+.light .border-white\/5, .light .border-white\/10 { border-color: rgba(0, 0, 0, 0.1) !important; }
+.light .bg-\[\#0a1122\] { background-color: #ffffff !important; }
+.light .bg-\[\#060d1a\] { background-color: #e2e8f0 !important; }
+.light .border-\[\#1e293b\] { border-color: #cbd5e1 !important; }
+.light .bg-\[\#050a14\] { background-color: #f1f5f9 !important; }
+.light .bg-\[\#0a1122\]\/80 { background-color: rgba(255, 255, 255, 0.8) !important; }
+
+/* Invert glass panels */
+.light .glass-panel, .light .gradient-card {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+.light .glass-header {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Invert form inputs */
+.light input, .light textarea, .light select {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.15) !important;
+  color: #0f172a !important;
+}
+
+/* Fix shadows & gradients */
+.light .shadow-2xl {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important;
+}
+.light .text-gradient {
+  background: linear-gradient(135deg, #059669 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.light .ambient-bg .orb-1 { background: radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%); }
+.light .ambient-bg .orb-2 { background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%); }
+.light .ambient-bg .orb-3 { background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%); }
+
+.light .glass-button-outline {
+  border-color: rgba(0,0,0,0.2) !important;
+  color: #334155 !important;
+}
+.light .glass-button-outline:hover {
+  background: rgba(16,185,129,0.1) !important;
+  border-color: #10b981 !important;
+  color: #059669 !important;
+}

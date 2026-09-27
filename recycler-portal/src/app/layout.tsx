@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -45,6 +46,7 @@ export default function RootLayout({
           <div className="orb orb-3"></div>
         </div>
         {children}
+        <ThemeToggle />
       </body>
     </html>
   );

@@ -138,7 +138,7 @@ class TraceabilityEvent(Base):
     __tablename__ = 'traceability_events'
     event_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     lot_id = Column(UUID(as_uuid=True), ForeignKey('material_lots.lot_id'))
-    txn_id = Column(UUID(as_uuid=True))
+    txn_id = Column(UUID(as_uuid=True), ForeignKey('transactions.txn_id'))
     event_type = Column(String(50), nullable=False)
     event_data = Column(JSON)
     actor_type = Column(String(20))
@@ -149,7 +149,7 @@ class TraceabilityEvent(Base):
 class SyncQueue(Base):
     __tablename__ = 'sync_queue'
     queue_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    collector_id = Column(UUID(as_uuid=True), nullable=False)
+    collector_id = Column(UUID(as_uuid=True), ForeignKey('collectors.collector_id'), nullable=False)
     op_type = Column(String(20))
     entity_type = Column(String(40))
     entity_id = Column(UUID(as_uuid=True))

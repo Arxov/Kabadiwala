@@ -15,7 +15,7 @@ class Collector(Base):
     operating_area = Column(String(255))
     area_name = Column(String(255))
     fcm_token = Column(String(512))
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True, index=True)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
     last_active_at = Column(DateTime(timezone=True), default=datetime.utcnow)
 
@@ -35,7 +35,7 @@ class MaterialLot(Base):
     est_value_max = Column(Float)
     ml_category = Column(String(40))
     ml_confidence = Column(Float)
-    status = Column(String(30), default='draft')
+    status = Column(String(30), default='draft', index=True)
     location = Column(String(255))
     location_address = Column(Text)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
@@ -82,7 +82,7 @@ class Recycler(Base):
     min_lot_weight_kg = Column(Float)
     rating = Column(Float, default=0)
     is_verified = Column(Boolean, default=False)
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True, index=True)
     updated_at = Column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class PriceData(Base):
@@ -155,7 +155,7 @@ class SyncQueue(Base):
     entity_id = Column(UUID(as_uuid=True))
     payload = Column(JSON, nullable=False)
     client_ts = Column(DateTime(timezone=True))
-    status = Column(String(20), default='pending')
+    status = Column(String(20), default='pending', index=True)
     retry_count = Column(Integer, default=0)
     error_msg = Column(Text)
     processed_at = Column(DateTime(timezone=True))

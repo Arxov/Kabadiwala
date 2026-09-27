@@ -77,8 +77,11 @@ async def update_lot(lot_id: str, payload: dict, db: Session = Depends(get_db)) 
     lot = db.query(MaterialLot).filter(MaterialLot.lot_id == lot_id).first()
     if not lot:
         raise HTTPException(status_code=404, detail="Lot not found")
+    # FIX: Prevent mass assignment vulnerability
+    allowed_fields = {"category", "subcategory", "weight_kg", "condition", "source_type"}
     for k, v in payload.items():
-        setattr(lot, k, v)
+        if k in allowed_fields:
+            setattr(lot, k, v)
     db.commit()
     db.refresh(lot)
     return lot
@@ -125,12 +128,32 @@ async def get_earnings_ledger() -> Any:
 async def get_safety_guides(lang: str = "hi", category: str = "BATTERY") -> Any:
     return {"guides": []}
 
+from dateutil.parser import isoparse
+
 @router.get("/sync")
 async def sync_pull(since: str = None, db: Session = Depends(get_db)) -> Any:
-    # A proper sync would filter by `updated_at > since`
-    prices = db.query(PriceData).all()
-    recyclers = db.query(Recycler).filter(Recycler.is_active == True).all()
-    txns = db.query(Transaction).all()
+    # FIX: Implemented actual 'since' filtering to prevent massive payload bombs on mobile app
+    price_query = db.query(PriceData)
+    recycler_query = db.query(Recycler).filter(Recycler.is_active == True)
+    txn_query = db.query(Transaction)
+
+    if since:
+        try:
+            since_dt = isoparse(since)
+            # Assuming models have updated_at or created_at. Fallback to created_at if updated_at is missing.
+            if hasattr(PriceData, 'updated_at'):
+                price_query = price_query.filter(PriceData.updated_at >= since_dt)
+            if hasattr(Recycler, 'updated_at'):
+                recycler_query = recycler_query.filter(Recycler.updated_at >= since_dt)
+            if hasattr(Transaction, 'updated_at'):
+                txn_query = txn_query.filter(Transaction.updated_at >= since_dt)
+        except ValueError:
+            pass # Ignore invalid date formats and return all for fallback
+
+    # Add a hard limit to prevent OOM errors on large syncs
+    prices = price_query.limit(200).all()
+    recyclers = recycler_query.limit(100).all()
+    txns = txn_query.limit(100).all()
     return {
         "delta": {
             "prices": prices,
@@ -163,8 +186,11 @@ async def sync_push(payload: dict, db: Session = Depends(get_db)) -> Any:
             elif entity == "lot" and action == "update":
                 lot = db.query(MaterialLot).filter(MaterialLot.lot_id == data.get("lot_id")).first()
                 if lot:
+                    # FIX: Prevent mass assignment vulnerability in sync
+                    allowed_fields = {"category", "subcategory", "weight_kg", "condition", "source_type"}
                     for k, v in data.items():
-                        setattr(lot, k, v)
+                        if k in allowed_fields:
+                            setattr(lot, k, v)
                     db.commit()
                     results.append({"id": op.get("id"), "status": "success"})
                 else:

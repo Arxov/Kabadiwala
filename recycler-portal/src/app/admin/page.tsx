@@ -641,3 +641,29 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+// Added for Hackathon Demo
+export function QRHandoverModal({ isOpen, onClose, txnId }: { isOpen: boolean, onClose: () => void, txnId: string }) {
+    if (!isOpen) return null;
+    
+    // In a real app, this would fetch from /api/v1/handover/${txnId}/generate-qr
+    // For demo purposes, we will mock the JWT token shape
+    const mockJwt = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eG5faWQiOiIke3R4bklkfSIsInJlY3ljbGVyX2lkIjoiZGVtby1yZWN5Y2xlciIsImV4cCI6MTk5OTk5OTk5OX0.mock_signature_for_demo`;
+    
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white p-8 rounded-xl max-w-sm w-full text-center shadow-2xl">
+                <h3 className="text-xl font-bold mb-2">Digital Handover</h3>
+                <p className="text-gray-500 mb-6 text-sm">Ask the collector to scan this QR code with their mobile app to cryptographically sign and complete the transaction.</p>
+                
+                <div className="flex justify-center mb-6 bg-gray-50 p-4 rounded-lg">
+                    <QRCodeSVG value={mockJwt} size={200} level="H" includeMargin={true} />
+                </div>
+                
+                <button onClick={onClose} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    );
+}

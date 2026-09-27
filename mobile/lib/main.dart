@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'E-Waste Connect',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        fontFamily: 'AppIcons',
+        # FIX: Removed fontFamily: 'AppIcons' which caused all text to render as wingdings/symbols
         scaffoldBackgroundColor: const Color(0xFFF5F5F5),
       ),
       localizationsDelegates: const [

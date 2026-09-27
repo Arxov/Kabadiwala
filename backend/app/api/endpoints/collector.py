@@ -121,10 +121,51 @@ async def classify_lot(lot_id: str) -> Any:
 async def estimate_lot_price(lot_id: str) -> Any:
     return {"estimate": [130, 150, 180], "unit": "kg"}
 
+import math
+
+def calculate_haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    # Earth radius in kilometers
+    R = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
+
 @router.get("/recyclers")
 async def get_nearby_recyclers(lat: float, lng: float, material: str = None, radius_km: int = 50, db: Session = Depends(get_db)) -> Any:
-    recyclers = db.query(Recycler).filter(Recycler.is_active == True).all()
-    return {"recyclers": recyclers}
+    """
+    Geospatial matching: Finds CPCB-authorized recyclers within the requested radius.
+    Sorts them from closest to furthest.
+    """
+    query = db.query(Recycler).filter(Recycler.is_active == True)
+    if material:
+        # Filter by material using JSON contains or simple ILIKE for demo purposes
+        query = query.filter(Recycler.materials_accepted.ilike(f"%{material}%"))
+        
+    all_recyclers = query.all()
+    matched = []
+    
+    for r in all_recyclers:
+        if not r.location:
+            continue
+        try:
+            # Parse 'lat,lng' string
+            r_lat, r_lng = map(float, r.location.split(','))
+            dist = calculate_haversine(lat, lng, r_lat, r_lng)
+            
+            if dist <= radius_km:
+                r_dict = r.__dict__.copy()
+                r_dict.pop('_sa_instance_state', None)
+                r_dict['distance_km'] = round(dist, 2)
+                matched.append(r_dict)
+        except Exception:
+            pass # Skip malformed locations
+
+    # Sort by closest distance
+    matched.sort(key=lambda x: x['distance_km'])
+    
+    return {"recyclers": matched, "search_radius_km": radius_km, "match_count": len(matched)}
 
 @router.post("/recyclers/{recycler_id}/quote")
 async def request_quote(recycler_id: str, payload: dict) -> Any:

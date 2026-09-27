@@ -48,6 +48,7 @@ async def get_price_trends(category: str, days: int = 30, lat: float = None, lng
 async def create_lot(payload: dict, db: Session = Depends(get_db)) -> Any:
     new_lot = MaterialLot(
         reference_code=payload.get("reference_code", str(uuid.uuid4())[:8]),
+        collector_id=payload.get("collector_id"), # FIX: Prevent orphaned lots
         category=payload.get("category", "OTHER"),
         subcategory=payload.get("subcategory"),
         weight_kg=payload.get("weight_kg", 0.0),
@@ -183,6 +184,7 @@ async def sync_push(payload: dict, db: Session = Depends(get_db)) -> Any:
             if entity == "lot" and action == "create":
                 new_lot = MaterialLot(
                     reference_code=data.get("reference_code", str(uuid.uuid4())[:8]),
+                    collector_id=data.get("collector_id"), # FIX: Prevent orphaned lots on sync
                     category=data.get("category", "OTHER"),
                     subcategory=data.get("subcategory"),
                     weight_kg=data.get("weight_kg", 0.0),

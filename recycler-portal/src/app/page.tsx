@@ -63,6 +63,9 @@ export default function Home() {
             <Link href="/" className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-white/5 border border-white/10">
               Lots Browser
             </Link>
+            <Link href="/prices" className="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+              Scrap Prices
+            </Link>
             <Link href="/handovers" className="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
               Handovers
             </Link>
@@ -95,6 +98,7 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="md:hidden mt-3 pb-3 border-t border-white/5 pt-3 flex flex-col gap-1 animate-slide-up">
             <Link href="/" className="px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-white/5">Lots Browser</Link>
+            <Link href="/prices" className="px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition">Scrap Prices</Link>
             <Link href="/handovers" className="px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition">Handovers</Link>
             <Link href="/admin" className="px-4 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition">Admin</Link>
             <Link href="/login" className="glass-button px-4 py-2.5 rounded-lg text-sm font-semibold text-white text-center mt-1">Sign In</Link>

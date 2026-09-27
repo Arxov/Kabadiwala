@@ -32,7 +32,7 @@ const recyclersList = [
   { id: 'r-001', name: 'GreenTech Recyclers', contact: 'Ramesh Gupta', phone: '+91 98765 43210', location: 'Kothrud, Pune', status: 'verified', rating: 4.8, totalVolume: '5,230 kg', speciality: 'Copper & Cables' },
   { id: 'r-002', name: 'EcoWaste Solutions', contact: 'Anita Sharma', phone: '+91 87654 32109', location: 'Hinjewadi, Pune', status: 'verified', rating: 4.5, totalVolume: '3,890 kg', speciality: 'E-Waste (Batteries)' },
   { id: 'r-003', name: 'CleanEarth Pvt Ltd', contact: 'Sunil Patil', phone: '+91 76543 21098', location: 'Hadapsar, Pune', status: 'pending', rating: 3.9, totalVolume: '1,450 kg', speciality: 'Mixed Metals' },
-  { id: 'r-004', name: 'MetalCraft Industries', contact: 'Deepak Joshi', phone: '+91 65432 10987', location: 'Pimpri, Pune', status: 'verified', rating: 4.7, totalVolume: '7,120 kg', speciality: 'Motherboards & PCB' },
+  { id: 'r-004', name: 'MetalCraft Industries', contact: 'Deepak Joshi', phone: '+91 65432 10987', location: 'Pimpri, Pune', status: 'verified', rating: 4.7, totalVolume: '7₹20 kg', speciality: 'Motherboards & PCB' },
   { id: 'r-005', name: 'Urban Scrap Co.', contact: 'Priya Nair', phone: '+91 54321 09876', location: 'Baner, Pune', status: 'suspended', rating: 2.8, totalVolume: '820 kg', speciality: 'Vehicle Scrap' },
 ];
 
@@ -205,7 +205,7 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab(item.key)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                 activeTab === item.key 
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.07)]'
+                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_20px_rgba(16₹85₹29,0.07)]'
                   : 'text-slate-500 hover:text-slate-200 hover:bg-white/5'
               }`}
               title={item.label}
@@ -397,8 +397,8 @@ export default function AdminDashboard() {
                         <div className="flex items-center gap-4">
                           <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
                             activity.status === 'success' 
-                              ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.4)]' 
-                              : 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.4)]'
+                              ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211₹53,0.4)]' 
+                              : 'bg-amber-400 shadow-[0_0_8px_rgba(251₹91,36,0.4)]'
                           }`}></div>
                           <p className="text-sm font-medium text-slate-300 group-hover:text-white transition">{activity.action}</p>
                         </div>
